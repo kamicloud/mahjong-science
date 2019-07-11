@@ -1,0 +1,19 @@
+{
+	"miniprogramRoot": "dist/",
+	"projectname": "mahjong-science",
+	"description": "mahjong-science",
+	"appid": "wx6fe5191b3913bd7d",
+	"setting": {
+		"urlCheck": false,
+		"es6": false,
+		"postcss": false,
+		"minified": false,
+		"newFeature": true,
+		"autoAudits": false,
+		"checkInvalidKey": true
+	},
+	"compileType": "miniprogram",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
+	"condition": {}
+}
