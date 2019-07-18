@@ -29,28 +29,30 @@
     "@tarojs/components": "1.3.4",
     "@tarojs/redux": "1.3.4",
     "@tarojs/redux-h5": "1.3.4",
-    "@tarojs/router": "1.3.4",
+    "@tarojs/router": "^1.3.9",
     "@tarojs/taro": "1.3.4",
     "@tarojs/taro-alipay": "1.3.4",
     "@tarojs/taro-h5": "1.3.4",
     "@tarojs/taro-swan": "1.3.4",
     "@tarojs/taro-tt": "1.3.4",
     "@tarojs/taro-weapp": "1.3.4",
-    "nervjs": "^1.4.0",
+    "lodash": ">=4.17.13",
     "nerv-devtools": "^1.4.0",
-    "redux": "^4.0.0",
+    "nervjs": "^1.4.0",
+    "redux": "^4.0.4",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "taro-ui": "^2.2.1"
   },
   "devDependencies": {
     "@tarojs/plugin-babel": "1.3.4",
     "@tarojs/plugin-csso": "1.3.4",
-    "@tarojs/plugin-sass": "1.3.4",
+    "@tarojs/plugin-sass": "^1.3.9",
     "@tarojs/plugin-uglifyjs": "1.3.4",
-    "@tarojs/webpack-runner": "1.3.4",
-    "@types/react": "^16.4.8",
-    "@types/webpack-env": "^1.13.6",
-    "@typescript-eslint/parser": "^1.6.0",
+    "@tarojs/webpack-runner": "^1.3.9",
+    "@types/react": "^16.8.23",
+    "@types/webpack-env": "^1.14.0",
+    "@typescript-eslint/parser": "^1.12.0",
     "babel-eslint": "^8.2.3",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
@@ -65,6 +67,6 @@
     "stylelint": "^10.1.0",
     "stylelint-config-taro-rn": "1.3.4",
     "stylelint-taro-rn": "1.3.4",
-    "typescript": "^3.0.1"
+    "typescript": "^3.5.3"
   }
 }

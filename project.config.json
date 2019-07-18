@@ -2,7 +2,7 @@
 	"miniprogramRoot": "dist/",
 	"projectname": "mahjong-science",
 	"description": "mahjong-science",
-	"appid": "wx6fe5191b3913bd7d",
+	"appid": "wxc7d8eb6c35492390",
 	"setting": {
 		"urlCheck": false,
 		"es6": false,
@@ -15,5 +15,47 @@
 	"compileType": "miniprogram",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
-	"condition": {}
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"list": []
+		},
+		"miniprogram": {
+			"current": 2,
+			"list": [
+				{
+					"id": -1,
+					"name": "qq群",
+					"pathName": "pages/index/group",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 1,
+					"name": "带参",
+					"pathName": "pages/index/index",
+					"query": "tile=11123456789999m",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "更新日志",
+					"pathName": "pages/index/changelog",
+					"query": "tile=11123456789999m",
+					"scene": null
+				}
+			]
+		}
+	}
 }

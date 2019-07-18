@@ -1,12 +1,17 @@
 import { ComponentClass, Fragment } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button, Text, Image } from '@tarojs/components'
+import { View, Button, Text, Image, Input, Switch } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 
 import { add, minus, asyncAdd } from '../../actions/counter'
 
 import './index.scss'
+import { Choice, RandomResponse, AnalyseResponse, TileAnalyseResult, AnalyseArrayResponse } from '../../utils/dtos'
+import ChoiceRender from './components/choices'
+import { AtDivider, AtInput, AtButton } from 'taro-ui'
 
+import constants from '../../utils/constants'
+import api from '../../utils/api'
 // #region 书写注意
 //
 // 目前 typescript 版本还无法在装饰器模式下将 Props 注入到 Taro.Component 中的 props 属性
@@ -19,7 +24,6 @@ import './index.scss'
 
 type PageStateProps = {
   counter: {
-    num: number
   }
 }
 
@@ -31,43 +35,23 @@ type PageDispatchProps = {
 
 type PageOwnProps = {}
 
-type PageState = {}
+type PageState = {
+  inputTileString: string,
+  result: TileAnalyseResult,
+  // currentTileString: string,
+  // currentTileSimpleString: string,
+  // shanten: number,
+  // currentTiles: number[],
+  // choices: Choice[],
+  // incShantenChoices: Choice[],
+  displayResult: boolean,
+}
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
 interface Index {
   props: IProps;
 }
-
-const TILE_LABEL_MAP = [
-  '1m',
-  '2m',
-  '3m',
-  '4m',
-  '5m',
-  '6m',
-  '7m',
-  '8m',
-  '9m',
-  '1p',
-  '2p',
-  '3p',
-  '4p',
-  '5p',
-  '6p',
-  '7p',
-  '8p',
-  '9p',
-  '1s',
-  '2s',
-  '3s',
-  '4s',
-  '5s',
-  '6s',
-  '7s',
-  '8s',
-  '9s',
-];
 
 @connect(({ counter }) => ({
   counter
@@ -85,50 +69,81 @@ const TILE_LABEL_MAP = [
 class Index extends Component {
 
   /**
- * 指定config的类型声明为: Taro.Config
- *
- * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
- * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
- * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
- */
+   * 指定config的类型声明为: Taro.Config
+   *
+   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
+   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
+   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
+   */
   config: Config = {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: '牌效何切'
   }
 
-  state = {
-    currentTitls: [3, 1, 1, 1, 1, 1, 1, 1, 3],
-    choices: [
-      {
-        discard: 15,
-        draws: [1, 3, 4],
-        drawCount: 8,
-      },
-      {
-        discard: 15,
-        draws: [1, 3, 4, 4, 5],
-        drawCount: 8,
-      },
-      {
-        discard: 15,
-        draws: [1, 3, 4, 8, 11, 12, 13],
-        drawCount: 8,
-      },
-    ]
+  state: PageState = {
+    inputTileString: '',
+    result: {
+      currentTileString: '',
+      currentTileSimpleString: '',
+      currentTiles: [3, 1, 1, 1, 1, 1, 1, 1, 3],
+      currentRenderTiles: [],
+      shanten: 0,
+      choices: [],
+      incShantenChoices: [],
+    },
+    displayResult: true,
   }
 
   componentWillReceiveProps(nextProps) {
     console.log(this.props, nextProps)
   }
 
+  componentWillMount() {
+  }
+
   componentWillUnmount() { }
 
   componentDidMount() {
-    let self = this
-    Taro.request({
-      url: 'http://localhost:8080/ping',
-      success: (res) => {
-        console.log(res.data)
-      }
+    if (this.$router.params.tile) {
+      this.setState({
+        inputTileString: this.$router.params.tile,
+      }, () => {
+        this.fetchResult()
+      })
+    } else {
+      this.random()
+    }
+  }
+
+  onShareAppMessage(res) {
+    if (res.from === 'button') {
+      // 来自页面内转发按钮
+      console.log(res.target)
+    }
+    let path = 'pages/index/index'
+    if (this.state.result.currentTileSimpleString) {
+      path += '?tile=' + this.state.result.currentTileSimpleString
+    }
+    return {
+      title: '何切？',
+      path: path,
+    }
+  }
+
+  random() {
+    api.mahjong.random({}, (data: RandomResponse) => {
+      this.setState({
+        result: data.result
+      })
+    })
+  }
+
+  fetchResult() {
+    api.mahjong.fetchResult({
+      tiles: this.state.inputTileString,
+    }, (data: AnalyseResponse) => {
+      this.setState({
+        result: data.result
+      })
     })
   }
 
@@ -136,75 +151,93 @@ class Index extends Component {
 
   componentDidHide() { }
 
-  render() {
-    console.log(this.state)
+  shantenText(shanten: number) {
+    if (shanten < 0) {
+      return '和了';
+    }
+    return constants.SHANTEN_LABEL_MAP[shanten]
+  }
 
-    var currentTiles: number[] = [];
-
-    this.state.currentTitls.forEach((count, tile) => {
-      for (let i = 0; i < count; i++) {
-        currentTiles.push(tile)
-      }
+  dropTile(tile: number) {
+    let temp = this.state.result.currentTiles
+    temp[tile]--
+    api.mahjong.analyseArray({
+      tiles: temp
+    }, (data: AnalyseArrayResponse) => {
+      this.setState({
+        result: data.result
+      })
     })
+    console.log(tile)
+  }
+
+  render() {
     return (
       <View className='index'>
-        <Button className='add_btn' onClick={this.props.add}>+</Button>
-        <Button className='dec_btn' onClick={this.props.dec}>-</Button>
-        <Button className='dec_btn' onClick={this.props.asyncAdd}>async</Button>
-        <View><Text>{this.props.counter.num}</Text></View>
         <View style={{
-          padding: '20px',
-          textAlign: 'center'
+          padding: '0 20px',
+
         }}>
+          <View>
+
+            <AtInput
+              name='inputTileString'
+              type='text'
+              value={this.state.inputTileString}
+              placeholder='请输入牌面'
+              onChange={(input) => {
+                this.setState({
+                  inputTileString: input,
+                })
+                console.log(input)
+              }}
+            />
+            <AtButton
+              size='small'
+              onClick={this.fetchResult.bind(this)}
+            >查看结果</AtButton>
+            <AtButton
+              size='small'
+              onClick={this.random.bind(this)}
+            >随机套牌</AtButton>
+          </View>
           <View style={{
-            marginBottom: '15px'
+            textAlign: 'center'
           }}>
-            {
-              currentTiles.map((currentTile) => {
+            <View>
+              <Text>{this.shantenText(this.state.result.shanten)}</Text>
+            </View>
+            <View><Text selectable={true}>{this.state.result.currentTileString}</Text></View>
+            <View style={{
+            }}>
+              {this.state.result.currentRenderTiles.map((currentTile) => {
                 return <Image
                   style={{
                     width: '31px',
                     height: '47px'
                   }}
-                  src={'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/th_l/' + TILE_LABEL_MAP[currentTile] + '.gif'}
+                  onClick={() => {
+                    this.dropTile(currentTile)
+                  }}
+                  src={'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/th_l/' + constants.TILE_LABEL_MAP[currentTile] + '.gif'}
                 />
-              })
-            }
+              })}
+            </View>
+            <AtDivider content='套牌解析' />
+            <ChoiceRender choices={this.state.result.choices} />
+            <AtDivider content='倒退向听选择（仅供参考）' />
+            <View></View>
+            <ChoiceRender choices={this.state.result.incShantenChoices} />
           </View>
-          <hr></hr>
           <View style={{
-            borderTop: '1px'
+            fontSize: '10px'
           }}>
-            {
-              this.state.choices.map((choice) => {
-                return <View>
-                  <Text>打</Text>
-                  <Image
-                    style={{
-                      width: '16px',
-                      height: '21px'
-                    }}
-                    src={'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/th_s/' + TILE_LABEL_MAP[choice.discard] + '.gif'}
-                  />
-                  <Text>摸 [ </Text>
-                  {
-                    choice.draws.map((count, tile) => {
-                      return <Image
-                        style={{
-                          width: '16px',
-                          height: '21px'
-                        }}
-                        src={'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/th_s/' + TILE_LABEL_MAP[tile] + '.gif'}
-                      />
-                    })
-                  }
-                  <Text> ] {choice.drawCount}枚</Text>
-                </View>
-              })
-            }
+            <Text>
+              - m=万子, p=筒子, s=索子, z=字牌, 0=红\n
+              - 一般形=4面子1雀头/标准形=一般形+7对形，不判断国士无双\n
+        </Text>
           </View>
         </View>
-        <View><Text>Hello, World</Text></View>
       </View>
     )
   }

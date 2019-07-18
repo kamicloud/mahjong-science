@@ -27,8 +27,28 @@ class App extends Component {
    */
   config: Config = {
     pages: [
-      'pages/index/index'
+      'pages/index/index',
+      'pages/index/group',
+      'pages/index/changelog',
     ],
+    tabBar: {
+      list: [{
+        pagePath: 'pages/index/index',
+        text: '牌效何切',
+        iconPath: 'images/moments/3000.png',
+        selectedIconPath: 'images/moments/3000.png',
+      }, {
+        pagePath: 'pages/index/group',
+        text: 'QQ群',
+        iconPath: 'images/moments/9010.png',
+        selectedIconPath: 'images/moments/9010.png',
+      }, {
+        pagePath: 'pages/index/changelog',
+        text: '更新日志',
+        iconPath: 'images/moments/5001.png',
+        selectedIconPath: 'images/moments/5001.png',
+      }]
+    },
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
