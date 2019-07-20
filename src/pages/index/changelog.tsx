@@ -87,6 +87,11 @@ class Group extends Component {
           </View>
           <View className='at-article__content'>
             <View className='at-article__section'>
+              <View className='at-article__h2'>1.0.2</View>
+              <View className='at-article__info'>
+                2019-06-20
+              </View>
+              <View className='at-article__p'>优化：打出牌的时候增加过度防止重复点击。</View>
               <View className='at-article__h2'>1.0.1</View>
               <View className='at-article__info'>
                 2019-06-18

@@ -14,6 +14,12 @@ export type TileAnalyseResult = {
   incShantenChoices: Choice[],
 }
 
+export type Groupx = {
+  title: string,
+  num: string,
+  content: string,
+}
+
 export type RandomResponse = {
   result: TileAnalyseResult,
 }
@@ -24,4 +30,8 @@ export type AnalyseResponse = {
 
 export type AnalyseArrayResponse = {
   result: TileAnalyseResult,
+}
+
+export type GroupResponse = {
+  groups: Group[],
 }

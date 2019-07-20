@@ -4,9 +4,11 @@ import { View, Button, Text, Image, Input, Form, Textarea } from '@tarojs/compon
 import { connect } from '@tarojs/redux'
 
 import './index.scss'
-import { Choice } from '../../utils/dtos'
+import { Choice, Groupx, GroupResponse } from '../../utils/dtos'
 
 import { AtCard } from "taro-ui"
+import apis from '../../utils/api';
+import _ from 'lodash'
 
 type PageStateProps = {
   counter: {
@@ -22,12 +24,7 @@ type PageDispatchProps = {
 type PageOwnProps = {}
 
 type PageState = {
-  inputTileString: string,
-  currentTileString: string,
-  choices: Choice[],
-  currentTiles: number[],
-  incShantenChoices: Choice[],
-  shanten: number,
+  groups: Groupx[],
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -54,12 +51,7 @@ class Group extends Component {
   }
 
   state: PageState = {
-    inputTileString: '',
-    currentTileString: '',
-    currentTiles: [3, 1, 1, 1, 1, 1, 1, 1, 3],
-    shanten: 0,
-    choices: [],
-    incShantenChoices: []
+    groups: [],
   }
 
   componentWillReceiveProps(nextProps) {
@@ -72,6 +64,11 @@ class Group extends Component {
   componentWillUnmount() { }
 
   componentDidMount() {
+    apis.mahjong.group({}, (data: GroupResponse) => {
+      this.setState({
+        groups: _.shuffle(data.groups),
+      })
+    })
   }
 
   componentDidShow() { }
@@ -102,15 +99,17 @@ class Group extends Component {
               注：广告位非盈利永久免费，排序暂为完全随机
             </View>
           </AtCard>
-          {/* <AtCard
-            title='呆呆雀魂粉丝群'
-            extra='123 456 789'
-          >
-            此群为呆呆首在雀魂的粉丝群，群内都是呆黑
-            此群为呆呆首在雀魂的粉丝群，群内都是呆黑
-            此群为呆呆首在雀魂的粉丝群，群内都是呆黑
-            此群为呆呆首在雀魂的粉丝群，群内都是呆黑
-          </AtCard> */}
+          {
+            this.state.groups.map((group) => {
+              return <AtCard
+                title={group.title}
+                extra={group.num}
+              >
+                {group.content}
+              </AtCard>
+            })
+          }
+
         </View>
       </View>
     )

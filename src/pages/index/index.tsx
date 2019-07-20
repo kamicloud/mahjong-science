@@ -8,7 +8,7 @@ import { add, minus, asyncAdd } from '../../actions/counter'
 import './index.scss'
 import { Choice, RandomResponse, AnalyseResponse, TileAnalyseResult, AnalyseArrayResponse } from '../../utils/dtos'
 import ChoiceRender from './components/choices'
-import { AtDivider, AtInput, AtButton } from 'taro-ui'
+import { AtDivider, AtInput, AtButton, AtActivityIndicator } from 'taro-ui'
 
 import constants from '../../utils/constants'
 import api from '../../utils/api'
@@ -44,6 +44,7 @@ type PageState = {
   // currentTiles: number[],
   // choices: Choice[],
   // incShantenChoices: Choice[],
+  dropping: boolean,
   displayResult: boolean,
 }
 
@@ -90,6 +91,7 @@ class Index extends Component {
       choices: [],
       incShantenChoices: [],
     },
+    dropping: false,
     displayResult: true,
   }
 
@@ -159,13 +161,17 @@ class Index extends Component {
   }
 
   dropTile(tile: number) {
+    this.setState({
+      dropping: true,
+    })
     let temp = this.state.result.currentTiles
     temp[tile]--
     api.mahjong.analyseArray({
       tiles: temp
     }, (data: AnalyseArrayResponse) => {
       this.setState({
-        result: data.result
+        result: data.result,
+        dropping: false,
       })
     })
     console.log(tile)
@@ -179,7 +185,6 @@ class Index extends Component {
 
         }}>
           <View>
-
             <AtInput
               name='inputTileString'
               type='text'
@@ -207,8 +212,30 @@ class Index extends Component {
             <View>
               <Text>{this.shantenText(this.state.result.shanten)}</Text>
             </View>
-            <View><Text selectable={true}>{this.state.result.currentTileString}</Text></View>
+            {
+              this.state.dropping ? <View style={{
+                height: '11px',
+              }}></View> : null
+            }
             <View style={{
+              position: 'relative',
+
+            }}>
+              {this.state.dropping ? <AtActivityIndicator
+                mode='center'
+                content='摸牌中...'></AtActivityIndicator> :
+                <Text
+
+                  selectable={true}>{this.state.result.currentTileString}</Text>
+              }
+            </View>
+            {
+              this.state.dropping ? <View style={{
+                height: '11px',
+              }}></View> : null
+            }
+            <View style={{
+              textAlign: 'center',
             }}>
               {this.state.result.currentRenderTiles.map((currentTile) => {
                 return <Image
@@ -217,11 +244,15 @@ class Index extends Component {
                     height: '47px'
                   }}
                   onClick={() => {
+                    if (this.state.dropping) {
+                      return
+                    }
                     this.dropTile(currentTile)
                   }}
                   src={'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/th_l/' + constants.TILE_LABEL_MAP[currentTile] + '.gif'}
                 />
               })}
+
             </View>
             <AtDivider content='套牌解析' />
             <ChoiceRender choices={this.state.result.choices} />
