@@ -1,12 +1,12 @@
-import { ComponentClass, Fragment } from 'react'
+import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button, Text, Image, Input, Switch } from '@tarojs/components'
+import { View, Text, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 
 import { add, minus, asyncAdd } from '../../actions/counter'
 
 import './index.scss'
-import { Choice, RandomResponse, AnalyseResponse, TileAnalyseResult, AnalyseArrayResponse } from '../../utils/dtos'
+import { RandomResponse, AnalyseResponse, TileAnalyseResult, AnalyseArrayResponse } from '../../utils/dtos'
 import ChoiceRender from './components/choices'
 import { AtDivider, AtInput, AtButton, AtActivityIndicator } from 'taro-ui'
 
@@ -78,7 +78,7 @@ class Index extends Component {
    */
   config: Config = {
     navigationBarTitleText: '牌效何切'
-  }
+  };
 
   state: PageState = {
     inputTileString: '',
@@ -93,7 +93,7 @@ class Index extends Component {
     },
     dropping: false,
     displayResult: true,
-  }
+  };
 
   componentWillReceiveProps(nextProps) {
     console.log(this.props, nextProps)
@@ -121,7 +121,7 @@ class Index extends Component {
       // 来自页面内转发按钮
       console.log(res.target)
     }
-    let path = 'pages/index/index'
+    let path = 'pages/index/index';
     if (this.state.result.currentTileSimpleString) {
       path += '?tile=' + this.state.result.currentTileSimpleString
     }
@@ -163,9 +163,9 @@ class Index extends Component {
   dropTile(tile: number) {
     this.setState({
       dropping: true,
-    })
-    let temp = this.state.result.currentTiles
-    temp[tile]--
+    });
+    let temp = this.state.result.currentTiles;
+    temp[tile]--;
     api.mahjong.analyseArray({
       tiles: temp
     }, (data: AnalyseArrayResponse) => {
@@ -173,11 +173,12 @@ class Index extends Component {
         result: data.result,
         dropping: false,
       })
-    })
+    });
     console.log(tile)
   }
 
   render() {
+    let { result } = this.state;
     return (
       <View className='index'>
         <View style={{
@@ -193,7 +194,7 @@ class Index extends Component {
               onChange={(input) => {
                 this.setState({
                   inputTileString: input,
-                })
+                });
                 console.log(input)
               }}
             />
@@ -205,7 +206,7 @@ class Index extends Component {
               size='small'
               onClick={this.random.bind(this)}
             >随机套牌</AtButton>
-          </View>
+            </View>
           <View style={{
             textAlign: 'center'
           }}>
@@ -215,7 +216,7 @@ class Index extends Component {
             {
               this.state.dropping ? <View style={{
                 height: '11px',
-              }}></View> : null
+              }}/> : null
             }
             <View style={{
               position: 'relative',
@@ -223,7 +224,7 @@ class Index extends Component {
             }}>
               {this.state.dropping ? <AtActivityIndicator
                 mode='center'
-                content='摸牌中...'></AtActivityIndicator> :
+                content='摸牌中...'/> :
                 <Text
 
                   selectable={true}>{this.state.result.currentTileString}</Text>
@@ -232,12 +233,12 @@ class Index extends Component {
             {
               this.state.dropping ? <View style={{
                 height: '11px',
-              }}></View> : null
+              }}/> : null
             }
             <View style={{
               textAlign: 'center',
             }}>
-              {this.state.result.currentRenderTiles.map((currentTile) => {
+              {result.currentRenderTiles.map((currentTile) => {
                 return <Image
                   style={{
                     width: '31px',
@@ -257,7 +258,7 @@ class Index extends Component {
             <AtDivider content='套牌解析' />
             <ChoiceRender choices={this.state.result.choices} />
             <AtDivider content='倒退向听选择（仅供参考）' />
-            <View></View>
+            <View />
             <ChoiceRender choices={this.state.result.incShantenChoices} />
           </View>
           <View style={{

@@ -1,18 +1,17 @@
-import { ComponentClass, Fragment } from 'react'
+import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button, Text, Image, Input, Form, Textarea } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 
 import './index.scss'
-import { Choice, Groupx, GroupResponse } from '../../utils/dtos'
+import { Groupx, GroupResponse } from '../../utils/dtos'
 
 import { AtCard } from "taro-ui"
 import apis from '../../utils/api';
-import _ from 'lodash'
+import _ from 'underscore'
 
 type PageStateProps = {
-  counter: {
-  }
+  counter: {}
 }
 
 type PageDispatchProps = {
@@ -35,8 +34,7 @@ interface Group {
 
 @connect(({ counter }) => ({
   counter
-}), (dispatch) => ({
-}))
+}), (dispatch) => ({}))
 class Group extends Component {
 
   /**
@@ -48,11 +46,11 @@ class Group extends Component {
    */
   config: Config = {
     navigationBarTitleText: 'QQ群宣传'
-  }
+  };
 
   state: PageState = {
     groups: [],
-  }
+  };
 
   componentWillReceiveProps(nextProps) {
     console.log(this.props, nextProps)
@@ -61,7 +59,8 @@ class Group extends Component {
   componentWillMount() {
   }
 
-  componentWillUnmount() { }
+  componentWillUnmount() {
+  }
 
   componentDidMount() {
     apis.mahjong.group({}, (data: GroupResponse) => {
@@ -71,16 +70,16 @@ class Group extends Component {
     })
   }
 
-  componentDidShow() { }
+  componentDidShow() {
+  }
 
-  componentDidHide() { }
+  componentDidHide() {
+  }
 
   render() {
     return (
       <View className='index'>
-        <View style={{
-
-        }}>
+        <View style={{}}>
           <AtCard
             title='麻雀交友群广告位'
             extra='这里是群号'

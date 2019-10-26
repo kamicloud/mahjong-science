@@ -38,6 +38,7 @@ let request = async (url: string, data: object) => {
 
 const host = 'https://juehaodiao.xyz'
 // const host = 'http://192.168.5.102:8080'
+// const host = 'http://localhost:8080'
 
 let errorCallback = (data) => {
   console.log(data, 'err')
