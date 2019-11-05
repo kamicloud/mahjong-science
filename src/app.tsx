@@ -28,7 +28,7 @@ class App extends Component {
   config: Config = {
     pages: [
       'pages/index/index',
-      'pages/index/group',
+      'pages/index/rank',
       'pages/index/changelog',
     ],
     tabBar: {
@@ -38,10 +38,10 @@ class App extends Component {
         iconPath: 'images/moments/3000.png',
         selectedIconPath: 'images/moments/3000.png',
       }, {
-        pagePath: 'pages/index/group',
-        text: 'QQ群',
-        iconPath: 'images/moments/9010.png',
-        selectedIconPath: 'images/moments/9010.png',
+        pagePath: 'pages/index/rank',
+        text: '排行榜',
+        iconPath: 'images/moments/2010.png',
+        selectedIconPath: 'images/moments/2010.png',
       }, {
         pagePath: 'pages/index/changelog',
         text: '更新日志',

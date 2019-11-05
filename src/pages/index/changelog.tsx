@@ -87,6 +87,11 @@ class Group extends Component {
           </View>
           <View className='at-article__content'>
             <View className='at-article__section'>
+              <View className='at-article__h2'>1.1.0</View>
+              <View className='at-article__info'>
+                2019-11-03
+              </View>
+              <View className='at-article__p'>功能：增加排行榜页面，每日同步雀魂官方数据，暂时UI比较简陋，因为没有搞定官方素材，搞定后会尽快更新。</View>
               <View className='at-article__h2'>1.0.2</View>
               <View className='at-article__info'>
                 2019-06-20

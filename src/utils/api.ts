@@ -9,12 +9,18 @@ interface ResponseData {
 interface Response {
   data: ResponseData,
 }
+let get = async(url: string, data: object) => {
+  return await request('GET', url, data)
+}
+let post = async(url: string, data: object) => {
+  return await request('POST', url, data)
+}
 
-let request = async (url: string, data: object) => {
+let request = async (method: 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'TRACE' | 'CONNECT', url: string, data: object) => {
   return await new Promise((resolve, reject) => {
     Taro.request({
       url: url,
-      method: 'POST',
+      method: method,
       data,
       success: (res: Response) => {
         console.log(res)
@@ -47,17 +53,25 @@ let errorCallback = (data) => {
 let apis = {
   mahjong: {
     random: (data, success) => {
-      request(host + '/mahjong/random', data).then(success).catch(errorCallback)
+      post(`${host}/mahjong/random`, data).then(success).catch(errorCallback)
+    },
+    rank: (data, success) => {
+      get(`${host}/mahjong/rank`, data).then(success).catch(errorCallback)
     },
     fetchResult: (data, success) => {
-      request(host + '/mahjong/analyse', data).then(success).catch(errorCallback)
+      post(`${host}/mahjong/analyse`, data).then(success).catch(errorCallback)
     },
     analyseArray: (data, success) => {
-      request(host + '/mahjong/analyse-array', data).then(success).catch(errorCallback)
+      post(`${host}/mahjong/analyse-array`, data).then(success).catch(errorCallback)
     },
     group: (data, success) => {
-      request(host + '/mahjong/group', data).then(success).catch(errorCallback)
+      post(`${host}/mahjong/group`, data).then(success).catch(errorCallback)
     },
+  },
+  wechat: {
+    codeToSession: (data, success) => {
+      post(`${host}/wechat/code-to-session`, data).then(success).catch(errorCallback)
+    }
   }
 }
 

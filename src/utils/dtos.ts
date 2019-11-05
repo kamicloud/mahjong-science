@@ -20,6 +20,19 @@ export type Groupx = {
   content: string,
 }
 
+export type Level = {
+  id: number,
+  score: number,
+}
+
+export type Rank = {
+  accountId: number,
+  avatarId: number,
+  nickname: string,
+  level: Level,
+  level3: Level,
+}
+
 export type RandomResponse = {
   result: TileAnalyseResult,
 }
@@ -33,5 +46,11 @@ export type AnalyseArrayResponse = {
 }
 
 export type GroupResponse = {
-  groups: Group[],
+  groups: Groupx[],
 }
+
+export type RankResponse = {
+  rank3: Rank[],
+  rank4: Rank[],
+}
+

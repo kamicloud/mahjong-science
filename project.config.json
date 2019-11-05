@@ -42,6 +42,10 @@
 		"game": {
 			"list": []
 		},
+		"gamePlugin": {
+			"current": -1,
+			"list": []
+		},
 		"miniprogram": {
 			"current": 2,
 			"list": [
@@ -64,6 +68,20 @@
 					"name": "更新日志",
 					"pathName": "pages/index/changelog",
 					"query": "tile=11123456789999m",
+					"scene": null
+				},
+				{
+					"id": 3,
+					"name": "雀吧",
+					"pathName": "pages/index/chat",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "排行榜",
+					"pathName": "pages/index/rank",
+					"query": "",
 					"scene": null
 				}
 			]
