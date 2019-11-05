@@ -30,6 +30,7 @@ class App extends Component {
       'pages/index/index',
       'pages/index/rank',
       'pages/index/changelog',
+      'pages/index/user',
     ],
     tabBar: {
       list: [{
@@ -37,6 +38,11 @@ class App extends Component {
         text: '牌效何切',
         iconPath: 'images/moments/3000.png',
         selectedIconPath: 'images/moments/3000.png',
+      }, {
+        pagePath: 'pages/index/user',
+        text: '查战绩',
+        iconPath: 'images/moments/8009.png',
+        selectedIconPath: 'images/moments/8009.png',
       }, {
         pagePath: 'pages/index/rank',
         text: '排行榜',

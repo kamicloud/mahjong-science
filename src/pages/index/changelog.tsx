@@ -87,6 +87,16 @@ class Group extends Component {
           </View>
           <View className='at-article__content'>
             <View className='at-article__section'>
+              <View className='at-article__h2'>1.3.0</View>
+              <View className='at-article__info'>
+                2019-11-04
+              </View>
+              <View className='at-article__p'>功能：引入了雀魂牌谱屋的部分功能，感谢apkc无私贡献的接口。</View>
+              <View className='at-article__h2'>1.2.0</View>
+              <View className='at-article__info'>
+                2019-11-04
+              </View>
+              <View className='at-article__p'>修复：去除了群推荐，因为会影响审核。</View>
               <View className='at-article__h2'>1.1.0</View>
               <View className='at-article__info'>
                 2019-11-03

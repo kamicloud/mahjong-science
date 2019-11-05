@@ -50,9 +50,9 @@
 			"current": 2,
 			"list": [
 				{
-					"id": -1,
-					"name": "qq群",
-					"pathName": "pages/index/group",
+					"id": 0,
+					"name": "查战绩",
+					"pathName": "pages/index/user",
 					"query": "",
 					"scene": null
 				},
