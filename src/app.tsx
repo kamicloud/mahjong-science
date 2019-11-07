@@ -31,6 +31,7 @@ class App extends Component {
       'pages/index/rank',
       'pages/index/changelog',
       'pages/index/user',
+      'pages/index/wiki-page',
     ],
     tabBar: {
       list: [{
@@ -43,6 +44,11 @@ class App extends Component {
         text: '查战绩',
         iconPath: 'images/moments/8009.png',
         selectedIconPath: 'images/moments/8009.png',
+      }, {
+        pagePath: 'pages/index/wiki-page',
+        text: '雀魂百科',
+        iconPath: 'images/moments/6007.png',
+        selectedIconPath: 'images/moments/6007.png',
       }, {
         pagePath: 'pages/index/rank',
         text: '排行榜',

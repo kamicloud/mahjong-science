@@ -7,8 +7,7 @@ import './index.scss'
 import { AtSearchBar, AtDivider, AtAccordion } from 'taro-ui'
 import _ from 'underscore';
 import apis from '../../utils/api';
-import _ from 'underscore'
-import { RankResponse, Rank } from 'src/utils/dtos'
+import { PlayerMetadata } from '../../../node_modules/amae-koromo/src/utils/dataTypes'
 import Chart from 'taro-echarts'
 import sapk from '../../apis/sapikacu'
 
@@ -321,7 +320,8 @@ class RankPage extends Component {
             width: 'auto',
           }}>
             <View className='at-col'>被飞率: {this.percentRender(this.state.playerStats.negative_rate)}</View>
-            <View className='at-col'></View>
+            <View className='at-col'>安定段位：{PlayerMetadata.estimateStableLevel2(this.state.playerStats, 12)}</View>
+
           </View>
         </View> : null
 
@@ -368,11 +368,6 @@ class RankPage extends Component {
           width: 'auto',
         }}>本页面数据由雀魂牌谱屋提供</View>
 
-
-        <View style={{
-          textAlign: 'center',
-          width: 'auto',
-        }}>https://amae-koromo.sapk.ch</View>
       </View>
     )
   }

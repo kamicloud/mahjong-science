@@ -83,6 +83,13 @@
 					"pathName": "pages/index/rank",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/index/wiki-page",
+					"pathName": "pages/index/wiki-page",
+					"query": "",
+					"scene": null
 				}
 			]
 		}

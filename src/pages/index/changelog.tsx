@@ -1,12 +1,11 @@
-import { ComponentClass, Fragment } from 'react'
+import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button, Text, Image, Input, Form, Textarea } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 
 import './index.scss'
 import { Choice } from '../../utils/dtos'
 
-import { AtCard } from "taro-ui"
 
 type PageStateProps = {
   counter: {
@@ -87,9 +86,21 @@ class Group extends Component {
           </View>
           <View className='at-article__content'>
             <View className='at-article__section'>
+              <View className='at-article__h2'>1.5.0</View>
+              <View className='at-article__info'>
+                2019-11-07
+              </View>
+              <View className='at-article__p'>优化：排行榜增加了头像。</View>
+              <View className='at-article__p'>功能：增加百科页面。</View>
+              <View className='at-article__h2'>1.4.0</View>
+              <View className='at-article__info'>
+                2019-11-06
+              </View>
+              <View className='at-article__p'>功能：加了牌谱屋的安定段位，不过算法是以玉之间的负和为准。</View>
+              <View className='at-article__p'>牢骚：审核又又又又又又又又没通过，先去掉了牌谱屋的链接，还不能通过就去申诉。</View>
               <View className='at-article__h2'>1.3.0</View>
               <View className='at-article__info'>
-                2019-11-04
+                2019-11-05
               </View>
               <View className='at-article__p'>功能：引入了雀魂牌谱屋的部分功能，感谢apkc无私贡献的接口。</View>
               <View className='at-article__h2'>1.2.0</View>

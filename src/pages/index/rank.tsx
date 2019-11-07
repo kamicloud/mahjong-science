@@ -1,6 +1,6 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View } from '@tarojs/components'
+import { View, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 
 import './index.scss'
@@ -9,6 +9,7 @@ import { AtTabs, AtTabsPane, AtNoticebar } from 'taro-ui'
 import apis from '../../utils/api';
 import _ from 'underscore'
 import { RankResponse, Rank } from 'src/utils/dtos'
+import avatarMapping from '../../../src/utils/avatar-mapping.json'
 
 type PageStateProps = {
   counter: {}
@@ -167,6 +168,13 @@ class RankPage extends Component {
                   margin: '0 20px 0 20px',
                   width: 'auto',
                 }}>
+                  <Image
+                    style={{
+                      width: '25px',
+                      height: '25px',
+                    }}
+                    src={'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/' + avatarMapping[rank.avatar_id].path + '/smallhead.png'}
+                  />
                   <View className='at-col'>{i + 1} {rank.nickname}</View>
                   <View className='at-col' style={{
                     textAlign: 'center',
@@ -185,6 +193,13 @@ class RankPage extends Component {
                   margin: '0 20px 0 20px',
                   width: 'auto',
                 }}>
+                  <Image
+                    style={{
+                      width: '25px',
+                      height: '25px',
+                    }}
+                    src={'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/' + avatarMapping[rank.avatar_id].path + '/smallhead.png'}
+                  />
                   <View className='at-col'>{i + 1} {rank.nickname}</View>
                   <View className='at-col' style={{
                     textAlign: 'center',
