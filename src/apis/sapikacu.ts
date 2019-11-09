@@ -34,16 +34,15 @@ let errorCallback = (data) => {
   console.log(data, 'err')
 }
 
+const host = 'https://juehaodiao.xyz'
+// const host = 'http://localhost:8080'
+
 let sapk = {
-  searchPlayer: (key, success) => {
-    let encoded = encodeURI(key)
-    return get(`https://juehaodiao.xyz/mahjong/search-player/${encoded}?limit=20`, {}).then(success).catch(errorCallback)
-  },
   playerStats: (id: number, success) => {
-    return get(`https://juehaodiao.xyz/mahjong/player-stats/${id}?mode=`, {}).then(success).catch(errorCallback)
+    return get(`${host}/mahjong/player-stats/${id}?mode=`, {}).then(success).catch(errorCallback)
   },
   playerExtendedStats: (id: number, success) => {
-    return get(`https://juehaodiao.xyz/mahjong/player-extended-stats/${id}?mode=`, {}).then(success).catch(errorCallback)
+    return get(`${host}/mahjong/player-extended-stats/${id}?mode=`, {}).then(success).catch(errorCallback)
   },
 }
 

@@ -29,9 +29,11 @@ class App extends Component {
     pages: [
       'pages/index/index',
       'pages/index/rank',
-      'pages/index/changelog',
+      'pages/index/about',
       'pages/index/user',
       'pages/index/wiki-page',
+      'pages/wiki/title',
+      'pages/wiki/han',
     ],
     tabBar: {
       list: [{
@@ -55,8 +57,8 @@ class App extends Component {
         iconPath: 'images/moments/2010.png',
         selectedIconPath: 'images/moments/2010.png',
       }, {
-        pagePath: 'pages/index/changelog',
-        text: '更新日志',
+        pagePath: 'pages/index/about',
+        text: '关于绝好调',
         iconPath: 'images/moments/5001.png',
         selectedIconPath: 'images/moments/5001.png',
       }]

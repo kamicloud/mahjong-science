@@ -4,6 +4,31 @@ export type Choice = {
   drawCount: number,
 }
 
+export type Rank2Level = {
+  id: number,
+  score: number,
+  delta: number,
+}
+
+export type Rank2Item = {
+  delta: number,
+  id: number,
+  latest_timestamp: number,
+  level: Rank2Level,
+  nickname: string,
+}
+
+export type Rank2Tap = {
+  bottom: Rank2Item[],
+  top: Rank2Item[],
+}
+
+export type Rank2DTO = {
+  0: Rank2Tap,
+  12: Rank2Tap,
+  16: Rank2Tap,
+}
+
 export type TileAnalyseResult = {
   currentTileString: string,
   currentTileSimpleString: string,

@@ -2,9 +2,7 @@ import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Image, Text } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-import { AtGrid, AtDivider } from 'taro-ui'
-
-import { Choice } from '../../utils/dtos'
+import { AtCard, AtDivider } from 'taro-ui'
 
 const titleMappingRaw = require('../../utils/title-mapping.json')
 
@@ -18,45 +16,23 @@ type PageStateProps = {
 }
 
 type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => any
 }
 
 type PageOwnProps = {}
 
 type PageState = {
-  inputTileString: string,
-  currentTileString: string,
-  choices: Choice[],
-  currentTiles: number[],
-  incShantenChoices: Choice[],
-  shanten: number,
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-interface WikiPage {
+interface TitlePage {
   props: IProps;
 }
-
-const dict = [
-  {
-    image: 'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/extendRes/emo/e200008/4.png',
-    value: '役种字典',
-    page: '/pages/wiki/han'
-  },
-  {
-    image: 'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/extendRes/emo/e200003/4.png',
-    value: '称号列表',
-    page: '/pages/wiki/title'
-  }
-]
 
 @connect(({ }) => ({
 }), (dispatch) => ({
 }))
-class WikiPage extends Component {
+class TitlePage extends Component {
 
   /**
    * 指定config的类型声明为: Taro.Config
@@ -66,7 +42,7 @@ class WikiPage extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '雀魂百科'
+    navigationBarTitleText: '雀魂百科 - 称号列表'
   }
 
   state: PageState = {
@@ -97,15 +73,39 @@ class WikiPage extends Component {
   render() {
     return (
       <View className='index'>
-        <AtGrid
-          onClick={(item: object, index: number) => {
-            Taro.navigateTo({ url: item.page })
-          }}
-          data={dict}
-        />
+        {titleMapping.map((title) => {
+          return <View
+            key={title.id}
+          >
+            <AtDivider content={title.name_chs} />
+
+            <View className='at-row'>
+              <View className='at-col' style={{
+                height: '50px',
+                textAlign: 'center',
+              }}>
+                <Image
+                  style={{
+                    height: '50px',
+                  }}
+                  mode='aspectFit'
+                  src={`https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/${title.icon}`}
+                />
+              </View>
+            </View>
+            <View style={{
+              padding: '10px',
+              fontSize: '14px',
+            }}>
+              <View>{title.desc_chs}</View>
+              <View>{title.desc_jp}</View>
+              <View>{title.desc_en}</View>
+            </View>
+          </View>
+        })}
       </View>
     )
   }
 }
 
-export default WikiPage as ComponentClass<PageOwnProps, PageState>
+export default TitlePage as ComponentClass<PageOwnProps, PageState>

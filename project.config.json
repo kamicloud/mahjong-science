@@ -8,10 +8,10 @@
 		"es6": false,
 		"enhance": false,
 		"postcss": false,
-		"minified": false,
+		"minified": true,
 		"newFeature": true,
 		"coverView": true,
-		"nodeModules": false,
+		"nodeModules": true,
 		"autoAudits": false,
 		"checkInvalidKey": true,
 		"checkSiteMap": true,
@@ -20,7 +20,8 @@
 			"ignore": [],
 			"disablePlugins": [],
 			"outputPath": ""
-		}
+		},
+		"bundle": true
 	},
 	"compileType": "miniprogram",
 	"simulatorType": "wechat",
@@ -64,9 +65,9 @@
 					"scene": null
 				},
 				{
-					"id": -1,
-					"name": "更新日志",
-					"pathName": "pages/index/changelog",
+					"id": 2,
+					"name": "pages/index/about",
+					"pathName": "pages/index/about",
 					"query": "tile=11123456789999m",
 					"scene": null
 				},
@@ -88,6 +89,13 @@
 					"id": -1,
 					"name": "pages/index/wiki-page",
 					"pathName": "pages/index/wiki-page",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/wiki/han",
+					"pathName": "pages/wiki/han",
 					"query": "",
 					"scene": null
 				}

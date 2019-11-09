@@ -3,22 +3,16 @@ import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 
-import './index.scss'
 import { AtSearchBar, AtDivider, AtAccordion } from 'taro-ui'
-import _ from 'underscore';
 import apis from '../../utils/api';
 import { PlayerMetadata } from '../../../node_modules/amae-koromo/src/utils/dataTypes'
 import Chart from 'taro-echarts'
 import sapk from '../../apis/sapikacu'
 
 type PageStateProps = {
-  counter: {}
 }
 
 type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => any
 }
 
 type PageOwnProps = {}
@@ -38,8 +32,7 @@ interface RankPage {
   props: IProps;
 }
 
-@connect(({ counter }) => ({
-  counter
+@connect(({ }) => ({
 }), (dispatch) => ({}))
 class RankPage extends Component {
 
@@ -66,7 +59,6 @@ class RankPage extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
   }
 
   componentWillMount() {
@@ -86,9 +78,13 @@ class RankPage extends Component {
       this.setState({
         playerExtendedStates: Object.assign({}, data),
       })
-      console.log(data)
     })
-    sapk.playerStats(id, (data) => {
+    apis.mahjong.proxy(`https://ak-data-2.sapk.ch/api/player_extended_stats/${id}?mode=`, (data) => {
+      this.setState({
+        playerExtendedStates: data,
+      })
+    })
+    apis.mahjong.proxy(`https://ak-data-2.sapk.ch/api/player_stats/${id}?mode=`, (data) => {
       this.setState({
         playerStats: data,
       })
@@ -102,7 +98,6 @@ class RankPage extends Component {
   }
 
   percentRender(number: number) {
-    console.log(number)
     return (Math.round(number * 10000) / 100) + '%';
   }
 
@@ -188,7 +183,8 @@ class RankPage extends Component {
   }
 
   onActionClick() {
-    sapk.searchPlayer(this.state.searchValue, (data) => {
+    apis.mahjong.proxy(`https://ak-data-2.sapk.ch/api/search_player/${this.state.searchValue}?limit=20`, (data) => {
+
       this.setState({
         playerList: data,
         open: true,
@@ -197,7 +193,6 @@ class RankPage extends Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <View className='index'>
         <AtSearchBar
@@ -336,7 +331,7 @@ class RankPage extends Component {
               },
               tooltip: {
                 trigger: 'item',
-                formatter: "{b} : {d}%"
+                formatter: "{b}"
               },
               series: [
                 {

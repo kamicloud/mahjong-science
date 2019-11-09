@@ -3,9 +3,6 @@ import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Text, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 
-import { add, minus, asyncAdd } from '../../actions/counter'
-
-import './index.scss'
 import { RandomResponse, AnalyseResponse, TileAnalyseResult, AnalyseArrayResponse } from '../../utils/dtos'
 import ChoiceRender from './components/choices'
 import { AtDivider, AtInput, AtButton, AtActivityIndicator } from 'taro-ui'
@@ -23,14 +20,9 @@ import api from '../../utils/api'
 // #endregion
 
 type PageStateProps = {
-  counter: {
-  }
 }
 
 type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => any
 }
 
 type PageOwnProps = {}
@@ -54,18 +46,8 @@ interface Index {
   props: IProps;
 }
 
-@connect(({ counter }) => ({
-  counter
+@connect(({  }) => ({
 }), (dispatch) => ({
-  add() {
-    dispatch(add())
-  },
-  dec() {
-    dispatch(minus())
-  },
-  asyncAdd() {
-    dispatch(asyncAdd())
-  }
 }))
 class Index extends Component {
 

@@ -3,30 +3,31 @@ import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 
-import './index.scss'
-import { AtTabs, AtTabsPane, AtNoticebar } from 'taro-ui'
+import { AtTabs, AtTabsPane, AtNoticebar, AtTabBar } from 'taro-ui'
 
 import apis from '../../utils/api';
-import _ from 'underscore'
-import { RankResponse, Rank } from 'src/utils/dtos'
+import { RankResponse, Rank, Rank2DTO } from 'src/utils/dtos'
 import avatarMapping from '../../../src/utils/avatar-mapping.json'
+import Rank2 from './components/rank2';
+import { mapLevelId } from '../../utils/rank-util'
 
 type PageStateProps = {
-  counter: {}
 }
 
 type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => any
 }
 
 type PageOwnProps = {}
 
 type PageState = {
   current: number,
+  current2: number,
+  current3: number,
+  current4: number,
   rank3: Rank[],
   rank4: Rank[],
+  rank1w: Rank2DTO,
+  rank4w: Rank2DTO,
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -35,8 +36,7 @@ interface RankPage {
   props: IProps;
 }
 
-@connect(({ counter }) => ({
-  counter
+@connect(({ }) => ({
 }), (dispatch) => ({}))
 class RankPage extends Component {
 
@@ -53,8 +53,40 @@ class RankPage extends Component {
 
   state: PageState = {
     current: 0,
+    current2: 0,
+    current3: 0,
+    current4: 0,
     rank3: [],
     rank4: [],
+    rank1w: {
+      0: {
+        bottom: [],
+        top: [],
+      },
+      12: {
+        bottom: [],
+        top: [],
+      },
+      16: {
+        bottom: [],
+        top: [],
+      },
+    },
+    rank4w: {
+
+      0: {
+        bottom: [],
+        top: [],
+      },
+      12: {
+        bottom: [],
+        top: [],
+      },
+      16: {
+        bottom: [],
+        top: [],
+      },
+    },
   };
 
   componentWillReceiveProps(nextProps) {
@@ -72,6 +104,17 @@ class RankPage extends Component {
       this.setState({
         rank3: data.rank3,
         rank4: data.rank4,
+      })
+    })
+    apis.mahjong.proxy('https://ak-data-2.sapk.ch/api/player_delta_ranking/1w', (data) => {
+      console.log(data)
+      this.setState({
+        rank1w: data,
+      })
+    })
+    apis.mahjong.proxy('https://ak-data-2.sapk.ch/api/player_delta_ranking/4w', (data) => {
+      this.setState({
+        rank4w: data,
       })
     })
   }
@@ -100,113 +143,104 @@ class RankPage extends Component {
     })
   }
 
-  mapLevelId(id) {
-    switch (id) {
-      case 10601:
-      case 20601:
-        return '魂天';
-      case 10503:
-      case 20503:
-        return '雀圣三星';
-      case 10502:
-      case 20502:
-        return '雀圣二星';
-      case 10501:
-      case 20501:
-        return '雀圣一星';
-      case 10403:
-      case 20403:
-        return '雀豪三星';
-      case 10402:
-      case 20402:
-        return '雀豪二星';
-      case 10401:
-      case 20401:
-        return '雀豪一星';
-      case 10303:
-      case 20303:
-        return '雀杰三星';
-      case 10302:
-      case 20302:
-        return '雀杰二星';
-      case 10301:
-      case 20301:
-        return '雀杰一星';
-      case 10203:
-      case 20203:
-        return '雀士三星';
-      case 10202:
-      case 20202:
-        return '雀士二星';
-      case 10201:
-      case 20201:
-        return '雀士一星';
-      case 10103:
-      case 20103:
-        return '初心三星';
-      case 10102:
-      case 20102:
-        return '初心二星';
-      case 10101:
-      case 20101:
-        return '初心一星';
-    }
-  }
+
 
   render() {
-    const tabList = [{ title: '四麻' }, { title: '三麻' }]
+    const tabList = [{ title: 'TOP 100' }, { title: '战绩榜' }]
     return (
       <View className='index'>
         <AtNoticebar marquee>
-          排行榜同步自雀魂官方，每天凌晨更新数据。UI将在拿到图片素材后优化。
+          TOP100 排行榜同步自雀魂官方，每天凌晨更新数据。战绩排行榜数据来自雀魂牌谱屋。如果遇到页面显示不全请联系作者。
         </AtNoticebar>
-        <AtTabs current={this.state.current} tabList={tabList} onClick={this.handleClick.bind(this)}>
+        <AtTabs
+          current={this.state.current}
+          tabList={tabList}
+          onClick={this.handleClick.bind(this)}
+          animated={false}
+        >
           <AtTabsPane current={this.state.current} index={0} >
-            {
-              this.state.rank4.map((rank: Rank, i) => {
-                return <View className='at-row' style={{
-                  margin: '0 20px 0 20px',
-                  width: 'auto',
-                }}>
-                  <Image
+            <AtTabBar
+              tabList={[
+                { title: '四麻' },
+                { title: '三麻' },
+              ]}
+              onClick={(current2) => { this.setState({ current2 }) }}
+              current={this.state.current2}
+            />
+            <View style={{
+              fontSize: '14px',
+              marginTop: '5px',
+            }}>
+              {
+                this.state.current2 === 0 ? this.state.rank4.map((rank: Rank, i) => {
+                  return <View
+                    className='at-row'
                     style={{
-                      width: '25px',
-                      height: '25px',
+                      margin: '0 10px 0 10px',
+                      width: 'auto',
                     }}
-                    src={'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/' + avatarMapping[rank.avatar_id].path + '/smallhead.png'}
-                  />
-                  <View className='at-col'>{i + 1} {rank.nickname}</View>
-                  <View className='at-col' style={{
-                    textAlign: 'center',
-                  }}>{this.mapLevelId(rank.level.id)} {rank.level.score}</View>
-                </View>
-              })
-            }
+                  >
+                    <Image
+                      style={{
+                        width: '25px',
+                        height: '25px',
+                      }}
+                      src={'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/' + avatarMapping[rank.avatar_id].path + '/smallhead.png'}
+                    />
+                    <View className='at-col'>{i + 1} {rank.nickname}</View>
+                    <View className='at-col' style={{
+                      textAlign: 'center',
+                    }}>{mapLevelId(rank.level.id)} {rank.level.score}</View>
+                  </View>
+                }) : this.state.rank3.map((rank: Rank, i) => {
+                  return <View className='at-row' style={{
+                    margin: '0 10px 0 10px',
+                    width: 'auto',
+                  }}>
+                    <Image
+                      style={{
+                        width: '25px',
+                        height: '25px',
+                      }}
+                      src={'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/' + avatarMapping[rank.avatar_id].path + '/smallhead.png'}
+                    />
+                    <View className='at-col'>{i + 1} {rank.nickname}</View>
+                    <View className='at-col' style={{
+                      textAlign: 'center',
+                    }}>{mapLevelId(rank.level3.id)} {rank.level3.score}</View>
+                  </View>
+                })
+              }
 
+            </View>
 
           </AtTabsPane>
           <AtTabsPane current={this.state.current} index={1}>
-
-            {
-              this.state.rank3.map((rank: Rank, i) => {
-                return <View className='at-row' style={{
-                  margin: '0 20px 0 20px',
-                  width: 'auto',
-                }}>
-                  <Image
-                    style={{
-                      width: '25px',
-                      height: '25px',
-                    }}
-                    src={'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/' + avatarMapping[rank.avatar_id].path + '/smallhead.png'}
-                  />
-                  <View className='at-col'>{i + 1} {rank.nickname}</View>
-                  <View className='at-col' style={{
-                    textAlign: 'center',
-                  }}>{this.mapLevelId(rank.level3.id)} {rank.level3.score}</View>
-                </View>
-              })
-            }
+            <AtTabBar
+              tabList={[
+                { title: '全部' },
+                { title: '玉' },
+                { title: '王座' },
+              ]}
+              onClick={(current3) => { this.setState({ current3 }) }}
+              current={this.state.current3}
+            />
+            <AtTabBar
+              tabList={[
+                { title: '一周' },
+                { title: '四周' },
+              ]}
+              onClick={(current4) => { this.setState({ current4 }) }}
+              current={this.state.current4}
+            />
+            <View>
+              <Rank2
+                current3={this.state.current3}
+                current4={this.state.current4}
+                rank1w={this.state.rank1w}
+                rank4w={this.state.rank4w}
+              />
+            </View>
           </AtTabsPane>
         </AtTabs>
       </View>

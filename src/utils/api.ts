@@ -23,7 +23,6 @@ let request = async (method: 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELE
       method: method,
       data,
       success: (res: Response) => {
-        console.log(res)
         let { status, data, message } = res.data
         if (status === 0) {
           return resolve(data)
@@ -52,6 +51,10 @@ let errorCallback = (data) => {
 
 let apis = {
   mahjong: {
+    proxy: (url, success) => {
+      let encoded = encodeURI(url)
+      return get(`${host}/mahjong/proxy?url=${encoded}`, {}).then(success).catch(errorCallback)
+    },
     random: (data, success) => {
       post(`${host}/mahjong/random`, data).then(success).catch(errorCallback)
     },
