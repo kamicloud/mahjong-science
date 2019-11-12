@@ -78,6 +78,18 @@ class AboutPage extends Component {
             <View className='at-article__p'>
               欢迎各位爱的雀士为本项目贡献代码和功能。
             </View>
+            <View className='at-article__p'>
+              由于个人小程序限制，本小程序无法为您提供以下服务：
+            </View>
+            <View className='at-article__p'>
+              QQ群宣传，涉及社交类无法审核通过；
+            </View>
+            <View className='at-article__p'>
+              嵌入百科等页面，个人小程序不支持Webview，所以任何教程或攻略都需要改写成富文本；
+              </View>
+            <View className='at-article__p'>
+              视频播放，个人小程序无法添加视频娱乐类目。
+            </View>
           </View>
         </AtAccordion>
         <AtAccordion
@@ -119,6 +131,11 @@ class AboutPage extends Component {
           <View className='at-article'>
             <View className='at-article__content'>
               <View className='at-article__section'>
+                <View className='at-article__h2'>1.8.0</View>
+                <View className='at-article__info'>
+                  2019-11-12
+              </View>
+                <View className='at-article__p'>功能：增加符数百科，役种可以条件筛选。</View>
                 <View className='at-article__h2'>1.7.0</View>
                 <View className='at-article__info'>
                   2019-11-09

@@ -1,37 +1,19 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Image, Text } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-import { AtGrid, AtDivider } from 'taro-ui'
+import { AtGrid } from 'taro-ui'
 
-import { Choice } from '../../utils/dtos'
-
-const titleMappingRaw = require('../../utils/title-mapping.json')
-
-const titleMapping = [];
-
-for (let i in titleMappingRaw) {
-  titleMapping.push(titleMappingRaw[i]);
-}
 
 type PageStateProps = {
 }
 
 type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => any
 }
 
 type PageOwnProps = {}
 
 type PageState = {
-  inputTileString: string,
-  currentTileString: string,
-  choices: Choice[],
-  currentTiles: number[],
-  incShantenChoices: Choice[],
-  shanten: number,
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -43,14 +25,19 @@ interface WikiPage {
 const dict = [
   {
     image: 'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/extendRes/emo/e200008/4.png',
-    value: '役种字典',
+    value: '役种词典',
     page: '/pages/wiki/han'
+  },
+  {
+    image: 'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/extendRes/emo/e200019/6.png',
+    value: '符数介绍',
+    page: '/pages/wiki/article?page=fu'
   },
   {
     image: 'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/extendRes/emo/e200003/4.png',
     value: '称号列表',
     page: '/pages/wiki/title'
-  }
+  },
 ]
 
 @connect(({ }) => ({
@@ -70,12 +57,6 @@ class WikiPage extends Component {
   }
 
   state: PageState = {
-    inputTileString: '',
-    currentTileString: '',
-    currentTiles: [3, 1, 1, 1, 1, 1, 1, 1, 3],
-    shanten: 0,
-    choices: [],
-    incShantenChoices: []
   }
 
   componentWillReceiveProps(nextProps) {

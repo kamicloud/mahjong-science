@@ -39,6 +39,8 @@ const TILE_LABEL_MAP = [
 ];
 
 const TILE_MAP = Object.assign({
+  'b': 'b',
+  'bb': 'b',
   '0m': '0m',
   '0p': '0p',
   '0s': '0s',

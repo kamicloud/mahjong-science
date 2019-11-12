@@ -27,6 +27,8 @@
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"libVersion": "2.9.0",
+	"qqappid": "1110027658",
+	"qqLibVersion": "1.8.0",
 	"condition": {
 		"search": {
 			"current": -1,
@@ -97,6 +99,20 @@
 					"name": "pages/wiki/han",
 					"pathName": "pages/wiki/han",
 					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/wiki/title",
+					"pathName": "pages/wiki/title",
+					"query": "tile=11123456789999m",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/wiki/article",
+					"pathName": "pages/wiki/article",
+					"query": "tile=11123456789999m",
 					"scene": null
 				}
 			]

@@ -1,0 +1,25 @@
+.wiki-h2 {
+  line-height: 100px;
+}
+
+.wiki-h3 {
+  line-height: 100px;
+}
+.article {
+  font-size: 34px;
+  padding: 20px;
+  line-height: 60px;
+}
+
+.wikitable {
+  width: 100%;
+  border: 1px black solid;
+  text-align: center;
+  font-size: 28px;
+}
+.wiki-copyright {
+  text-align: right;
+}
+.wiki-tile {
+  margin-left: -10px;
+}

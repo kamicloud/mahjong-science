@@ -34,6 +34,7 @@ class App extends Component {
       'pages/index/wiki-page',
       'pages/wiki/title',
       'pages/wiki/han',
+      'pages/wiki/article',
     ],
     tabBar: {
       list: [{
