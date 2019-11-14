@@ -38,6 +38,11 @@ const dict = [
     value: '称号列表',
     page: '/pages/wiki/title'
   },
+  {
+    image: 'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/extendRes/emo/e200001/8.png',
+    value: '寻觅模拟器',
+    page: '/pages/wiki/simulator'
+  },
 ]
 
 @connect(({ }) => ({
@@ -53,7 +58,7 @@ class WikiPage extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '雀魂百科'
+    navigationBarTitleText: '雀魂绝好调'
   }
 
   state: PageState = {

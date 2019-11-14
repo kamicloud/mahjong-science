@@ -131,6 +131,12 @@ class AboutPage extends Component {
           <View className='at-article'>
             <View className='at-article__content'>
               <View className='at-article__section'>
+                <View className='at-article__h2'>1.9.0</View>
+                <View className='at-article__info'>
+                  2019-11-14
+              </View>
+                <View className='at-article__p'>功能：增加寻觅模拟。</View>
+                <View className='at-article__p'>预告：2.0.0版本会完整同步雀魂牌谱屋功能。</View>
                 <View className='at-article__h2'>1.8.0</View>
                 <View className='at-article__info'>
                   2019-11-12

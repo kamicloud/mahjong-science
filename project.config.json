@@ -6,7 +6,7 @@
 	"setting": {
 		"urlCheck": false,
 		"es6": false,
-		"enhance": false,
+		"enhance": true,
 		"postcss": false,
 		"minified": true,
 		"newFeature": true,
@@ -112,6 +112,13 @@
 					"id": -1,
 					"name": "pages/wiki/article",
 					"pathName": "pages/wiki/article",
+					"query": "tile=11123456789999m",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/wiki/simulator",
+					"pathName": "pages/wiki/simulator",
 					"query": "tile=11123456789999m",
 					"scene": null
 				}
