@@ -131,6 +131,18 @@ class AboutPage extends Component {
           <View className='at-article'>
             <View className='at-article__content'>
               <View className='at-article__section'>
+                <View className='at-article__h2'>1.11.0</View>
+                <View className='at-article__info'>
+                  2019-11-16
+              </View>
+                <View className='at-article__p'>功能：再增加三个排行榜功能。</View>
+                <View className='at-article__h2'>1.10.0</View>
+                <View className='at-article__info'>
+                  2019-11-16
+              </View>
+                <View className='at-article__p'>功能：增加三个排行榜功能。</View>
+                <View className='at-article__p'>修复：去掉了寻觅模拟中的新春活动装扮。</View>
+                <View className='at-article__p'>预告：2.0.0版本会完整同步雀魂牌谱屋功能。</View>
                 <View className='at-article__h2'>1.9.0</View>
                 <View className='at-article__info'>
                   2019-11-14

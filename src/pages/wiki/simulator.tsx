@@ -76,8 +76,9 @@ const advGiftBox = [
 
 const skinBox = _.map(chestArray, 'id').filter((id) => {
   return (girlBox.indexOf(id) === -1 && boyBox.indexOf(id) === -1) &&
-    id !== 1999 &&
-    id !== 1046
+    id !== 1999 && // 许愿石
+    id !== 1046 && // 一周年桌布
+    id !== 1025 // 新春桌布
   ;
 });
 

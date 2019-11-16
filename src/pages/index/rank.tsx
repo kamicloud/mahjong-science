@@ -9,6 +9,8 @@ import apis from '../../utils/api';
 import { RankResponse, Rank, Rank2DTO } from 'src/utils/dtos'
 import avatarMapping from '../../../src/utils/avatar-mapping.json'
 import Rank2 from './components/rank2';
+import Rank3 from './components/rank3';
+import Rank4 from './components/rank4';
 import { mapLevelId } from '../../utils/rank-util'
 
 type PageStateProps = {
@@ -24,8 +26,15 @@ type PageState = {
   current2: number,
   current3: number,
   current4: number,
+  current5: number,
   rank3: Rank[],
   rank4: Rank[],
+  rank5: Rank[],
+  rank6: Rank[],
+  rank7: Rank[],
+  rank8: Rank[],
+  rank9: Rank[],
+  rank10: Rank[],
   rank1w: Rank2DTO,
   rank4w: Rank2DTO,
 }
@@ -56,8 +65,15 @@ class RankPage extends Component {
     current2: 0,
     current3: 0,
     current4: 0,
+    current5: 0,
     rank3: [],
     rank4: [],
+    rank5: [],
+    rank6: [],
+    rank7: [],
+    rank8: [],
+    rank9: [],
+    rank10: [],
     rank1w: {
       0: {
         bottom: [],
@@ -107,7 +123,6 @@ class RankPage extends Component {
       })
     })
     apis.mahjong.proxy('https://ak-data-2.sapk.ch/api/player_delta_ranking/1w', (data) => {
-      console.log(data)
       this.setState({
         rank1w: data,
       })
@@ -143,15 +158,75 @@ class RankPage extends Component {
     })
   }
 
+  syncRank5(mode) {
+    apis.mahjong.proxy(`https://ak-data-2.sapk.ch/api/career_ranking/rank1?mode=${mode}`, (data) => {
+      this.setState({
+        rank5: data,
+      })
+    })
+  }
 
+  syncRank6(mode) {
+    apis.mahjong.proxy(`https://ak-data-2.sapk.ch/api/career_ranking/rank4?mode=${mode}`, (data) => {
+      this.setState({
+        rank6: data,
+      })
+    })
+  }
+
+  syncRank7(mode) {
+    apis.mahjong.proxy(`https://ak-data-2.sapk.ch/api/career_ranking/rank12?mode=${mode}`, (data) => {
+      this.setState({
+        rank7: data,
+      })
+    })
+  }
+
+  syncRank8(mode) {
+    apis.mahjong.proxy(`https://ak-data-2.sapk.ch/api/career_ranking/stable_level?mode=${mode}`, (data) => {
+      this.setState({
+        rank8: data,
+      })
+    })
+  }
+
+  syncRank9(mode) {
+    apis.mahjong.proxy(`https://ak-data-2.sapk.ch/api/career_ranking/avg_rank?mode=${mode}`, (data) => {
+      this.setState({
+        rank9: data,
+      })
+    })
+  }
+
+  syncRank10(mode) {
+    apis.mahjong.proxy(`https://ak-data-2.sapk.ch/api/career_ranking/num_games?mode=${mode}`, (data) => {
+      this.setState({
+        rank10: data,
+      })
+    })
+  }
+
+
+  formatStableLevel2(level: number): string {
+    if (level >= 7) {
+      return `魂${Math.round((level - 6) * 100) / 100}`;
+    }
+    if (level >= 4) {
+      return `圣${Math.round((level - 3) * 100) / 100}`;
+    }
+    return `豪${Math.round(level)}`;
+  }
 
   render() {
     const tabList = [{ title: 'TOP 100' }, { title: '战绩榜' }]
     return (
-      <View className='index'>
-        <AtNoticebar marquee>
-          TOP100 排行榜同步自雀魂官方，每天凌晨更新数据。战绩排行榜数据来自雀魂牌谱屋。如果遇到页面显示不全请联系作者。
-        </AtNoticebar>
+      <View
+        className='index'
+
+        style={{
+          fontSize: '14px',
+        }}
+      >
         <AtTabs
           current={this.state.current}
           tabList={tabList}
@@ -185,7 +260,7 @@ class RankPage extends Component {
                         width: '25px',
                         height: '25px',
                       }}
-                      src={'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/' + avatarMapping[rank.avatar_id].path + '/smallhead.png'}
+                      src={'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/' + avatarMapping[rank.avatar_id].path + '/smallhead.png'}
                     />
                     <View className='at-col'>{i + 1} {rank.nickname}</View>
                     <View className='at-col' style={{
@@ -202,7 +277,7 @@ class RankPage extends Component {
                         width: '25px',
                         height: '25px',
                       }}
-                      src={'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/' + avatarMapping[rank.avatar_id].path + '/smallhead.png'}
+                      src={'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/' + avatarMapping[rank.avatar_id].path + '/smallhead.png'}
                     />
                     <View className='at-col'>{i + 1} {rank.nickname}</View>
                     <View className='at-col' style={{
@@ -216,31 +291,189 @@ class RankPage extends Component {
 
           </AtTabsPane>
           <AtTabsPane current={this.state.current} index={1}>
-            <AtTabBar
+            <AtTabs
+              current={this.state.current5}
+              scroll
+              height='1000px'
+              tabDirection='vertical'
               tabList={[
-                { title: '全部' },
-                { title: '玉' },
-                { title: '王座' },
+                { title: '苦与汪' },
+                { title: '一位率' },
+                { title: '四位率' },
+                { title: '连对率' },
+                { title: '安定段位' },
+                { title: '平均顺位' },
+                { title: '肝帝' },
               ]}
-              onClick={(current3) => { this.setState({ current3 }) }}
-              current={this.state.current3}
-            />
-            <AtTabBar
-              tabList={[
-                { title: '一周' },
-                { title: '四周' },
-              ]}
-              onClick={(current4) => { this.setState({ current4 }) }}
-              current={this.state.current4}
-            />
-            <View>
-              <Rank2
-                current3={this.state.current3}
-                current4={this.state.current4}
-                rank1w={this.state.rank1w}
-                rank4w={this.state.rank4w}
-              />
-            </View>
+              onClick={(current5) => {
+                this.setState({ current5 })
+
+                let mode = 0
+                if (this.state.current3 === 1) {
+                  mode = 12
+                } else if (this.state.current3 === 2) {
+                  mode = 16;
+                }
+                if (current5 === 1) {
+                  this.syncRank5(mode)
+                } else if (current5 === 2) {
+                  this.syncRank6(mode)
+                } else if (current5 === 3) {
+                  this.syncRank7(mode)
+                } else if (current5 === 4) {
+                  this.syncRank8(mode)
+                } else if (current5 === 5) {
+                  this.syncRank9(mode)
+                } else if (current5 === 6) {
+                  this.syncRank10(mode)
+                }
+              }}
+            >
+              <AtTabsPane tabDirection='vertical' current={this.state.current5} index={0}>
+                <AtTabBar
+                  tabList={[{ title: '全部' }, { title: '玉' }, { title: '王座' }]}
+                  onClick={(current3) => {
+                    this.setState({
+                      current3
+                    })
+                  }}
+                  current={this.state.current3}
+                />
+                <AtTabBar
+                  tabList={[{ title: '一周' }, { title: '四周' }]}
+                  onClick={(current4) => { this.setState({ current4 }) }}
+                  current={this.state.current4}
+                />
+                <View>
+                  <Rank2
+                    current3={this.state.current3}
+                    current4={this.state.current4}
+                    rank1w={this.state.rank1w}
+                    rank4w={this.state.rank4w}
+                  />
+                </View>
+              </AtTabsPane>
+              <AtTabsPane tabDirection='vertical' current={this.state.current5} index={1}>
+                <AtTabBar
+                  tabList={[{ title: '全部' }, { title: '玉' }, { title: '王座' }]}
+                  onClick={(current3) => {
+                    this.setState({ current3 })
+                    let mode = 0
+                    if (current3 === 1) {
+                      mode = 12
+                    } else if (current3 === 2) {
+                      mode = 16;
+                    }
+                    this.syncRank5(mode)
+                  }}
+                  current={this.state.current3}
+                />
+                <Rank3 ranks={this.state.rank5} />
+              </AtTabsPane>
+              <AtTabsPane tabDirection='vertical' current={this.state.current5} index={2}>
+
+                <AtTabBar
+                  tabList={[{ title: '全部' }, { title: '玉' }, { title: '王座' }]}
+                  onClick={(current3) => {
+                    this.setState({ current3 })
+                    let mode = 0
+                    if (current3 === 1) {
+                      mode = 12
+                    } else if (current3 === 2) {
+                      mode = 16;
+                    }
+                    this.syncRank6(mode)
+                  }}
+                  current={this.state.current3}
+                />
+                <Rank3 ranks={this.state.rank6} />
+              </AtTabsPane>
+              <AtTabsPane tabDirection='vertical' current={this.state.current5} index={3}>
+
+                <AtTabBar
+                  tabList={[{ title: '全部' }, { title: '玉' }, { title: '王座' }]}
+                  onClick={(current3) => {
+                    this.setState({ current3 })
+                    let mode = 0
+                    if (current3 === 1) {
+                      mode = 12
+                    } else if (current3 === 2) {
+                      mode = 16;
+                    }
+                    this.syncRank7(mode)
+                  }}
+                  current={this.state.current3}
+                />
+                <Rank3 ranks={this.state.rank7} />
+              </AtTabsPane>
+              <AtTabsPane tabDirection='vertical' current={this.state.current5} index={4}>
+
+                <AtTabBar
+                  tabList={[{ title: '全部' }, { title: '玉' }, { title: '王座' }]}
+                  onClick={(current3) => {
+                    this.setState({ current3 })
+                    let mode = 0
+                    if (current3 === 1) {
+                      mode = 12
+                    } else if (current3 === 2) {
+                      mode = 16;
+                    }
+                    this.syncRank8(mode)
+                  }}
+                  current={this.state.current3}
+                />
+                <Rank4
+                  ranks={this.state.rank8.map(rank => {
+                    rank.rank_key = this.formatStableLevel2(rank.rank_key) + `(${rank.count})`
+                    return rank
+                  })}
+                />
+              </AtTabsPane>
+              <AtTabsPane tabDirection='vertical' current={this.state.current5} index={5}>
+                <AtTabBar
+                  tabList={[{ title: '全部' }, { title: '玉' }, { title: '王座' }]}
+                  onClick={(current3) => {
+                    this.setState({ current3 })
+                    let mode = 0
+                    if (current3 === 1) {
+                      mode = 12
+                    } else if (current3 === 2) {
+                      mode = 16;
+                    }
+                    this.syncRank9(mode)
+                  }}
+                  current={this.state.current3}
+                />
+                <Rank4
+                  ranks={this.state.rank9.map(rank => {
+                    rank.rank_key = Math.round(rank.rank_key * 1000) / 1000 + `(${rank.count})`
+                    return rank
+                  })}
+                />
+              </AtTabsPane>
+              <AtTabsPane tabDirection='vertical' current={this.state.current5} index={5}>
+                <AtTabBar
+                  tabList={[{ title: '全部' }, { title: '玉' }, { title: '王座' }]}
+                  onClick={(current3) => {
+                    this.setState({ current3 })
+                    let mode = 0
+                    if (current3 === 1) {
+                      mode = 12
+                    } else if (current3 === 2) {
+                      mode = 16;
+                    }
+                    this.syncRank10(mode)
+                  }}
+                  current={this.state.current3}
+                />
+                <Rank4 ranks={this.state.rank10} />
+              </AtTabsPane>
+            </AtTabs>
+
+
+
+
+
           </AtTabsPane>
         </AtTabs>
       </View>
