@@ -224,18 +224,17 @@ class SimulatorPage extends Component {
           padding: '20px',
         }}
       >
-        <View>说明：本模拟器仅根据雀魂官方公布概率进行模拟寻觅，暂不支持活动概率UP模拟。卡池不会自动修正，故无法抽到新上架物品且可能抽到已下架物品，敬请谅解。</View>
-        <View>雀魂官方概率：雀士5%，装扮15%，绿礼物24%，蓝礼物51%，紫礼物5%。</View>
+        <View>官方公布概率：雀士5%，装扮15%，绿24%，蓝51%，紫5%。</View>
         <AtButton
           onClick={this.drawOnce.bind(this)}
-        >200 抽一次</AtButton>
+        >寻觅</AtButton>
         <AtButton
           onClick={this.drawTenTimes.bind(this)}
-        >1800 连抽十次（必得紫礼物）</AtButton>
+        >连续寻觅十次</AtButton>
 
-        <View>抽到物品列表</View>
+        <View>道具列表</View>
         <View>共：{this.state.count}次，雀士：{this.state.characterCount}位。</View>
-        <View>装扮：{this.state.skinCount}个，高级礼物：{this.state.advGiftCount}个。</View>
+        <View>装扮：{this.state.skinCount}个，紫：{this.state.advGiftCount}个。</View>
         <View
           style={{
             flexDirection: 'row',
