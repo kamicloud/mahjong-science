@@ -6,10 +6,6 @@ import { connect } from '@tarojs/redux'
 import { AtSearchBar, AtDivider, AtAccordion } from 'taro-ui'
 import Chart from 'taro-echarts'
 
-const characters = [];
-const skins = [];
-const gifts = [];
-
 type PageStateProps = {
 }
 

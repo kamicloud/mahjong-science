@@ -121,6 +121,12 @@
 					"pathName": "pages/wiki/simulator",
 					"query": "tile=11123456789999m",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/wiki/library",
+					"pathName": "pages/wiki/library",
+					"scene": null
 				}
 			]
 		}

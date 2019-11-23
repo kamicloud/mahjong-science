@@ -43,6 +43,11 @@ const dict = [
     value: '寻觅模拟器',
     page: '/pages/wiki/simulator'
   },
+  {
+    image: 'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/extendRes/emo/e200009/0.png',
+    value: '图书馆',
+    page: '/pages/wiki/library'
+  },
 ]
 
 @connect(({ }) => ({

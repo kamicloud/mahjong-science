@@ -4,7 +4,7 @@ import { View, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import _ from 'lodash'
 
-import { AtSearchBar, AtDivider, AtAccordion, AtButton } from 'taro-ui'
+import { AtTabBar, AtSwitch, AtAccordion, AtButton } from 'taro-ui'
 
 const chestMapping = require('../../utils/chest-mapping.json');
 const itemMapping = require('../../utils/item-mapping.json')
@@ -23,7 +23,6 @@ const girlBox = [
   1004,
   1005,
   1006,
-  1007,
   1031,
   1032,
   1043,
@@ -79,7 +78,7 @@ const skinBox = _.map(chestArray, 'id').filter((id) => {
     id !== 1999 && // 许愿石
     id !== 1046 && // 一周年桌布
     id !== 1025 // 新春桌布
-  ;
+    ;
 });
 
 type PageStateProps = {
@@ -97,6 +96,8 @@ type PageState = {
   characterCount: number,
   skinCount: number,
   advGiftCount: number,
+  current: number,
+  isFilterLowGifts: boolean,
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -121,11 +122,13 @@ class SimulatorPage extends Component {
   };
 
   state: PageState = {
+    isFilterLowGifts: false,
     gains: [],
     count: 0,
     characterCount: 0,
     skinCount: 0,
     advGiftCount: 0,
+    current: 0,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -161,7 +164,7 @@ class SimulatorPage extends Component {
         characterCount: ++this.state.characterCount,
         gains: [{
           type: 0,
-          id: this.randomOneFromArray(girlBox)
+          id: this.randomOneFromArray(this.state.current === 1 ? boyBox : girlBox)
         }, ...this.state.gains],
       })
     } else if (value < 20) {
@@ -190,7 +193,7 @@ class SimulatorPage extends Component {
           id: this.randomOneFromArray(blueGiftBox),
         }, ...this.state.gains],
       })
-    } else  {
+    } else {
       // adv gift
       this.randomOneAdvGift()
     }
@@ -224,7 +227,19 @@ class SimulatorPage extends Component {
           padding: '20px',
         }}
       >
-        <View>官方公布概率：雀士5%，装扮15%，绿24%，蓝51%，紫5%。</View>
+        <AtTabBar
+          tabList={[
+            { title: '樱花之路' },
+            { title: '竹林之路' },
+          ]}
+          onClick={current => this.setState({ current })}
+          current={this.state.current}
+        />
+        <View
+          style={{
+            marginTop: '10px',
+          }}
+        >官方公布概率：雀士5%，装扮15%，绿24%，蓝51%，紫5%。</View>
         <AtButton
           onClick={this.drawOnce.bind(this)}
         >寻觅</AtButton>

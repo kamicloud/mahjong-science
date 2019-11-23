@@ -9,6 +9,11 @@ import { PlayerMetadata } from '../../../node_modules/amae-koromo/src/utils/data
 import Chart from 'taro-echarts'
 import sapk from '../../apis/sapikacu'
 
+const style = {
+  margin: '0 20px 0 20px',
+  width: 'auto',
+}
+
 type PageStateProps = {
 }
 
@@ -73,11 +78,6 @@ class RankPage extends Component {
   searchUser(id) {
     this.setState({
       open: false,
-    })
-    sapk.playerExtendedStats(id, (data) => {
-      this.setState({
-        playerExtendedStates: Object.assign({}, data),
-      })
     })
     apis.mahjong.proxy(`https://ak-data-2.sapk.ch/api/player_extended_stats/${id}?mode=`, (data) => {
       this.setState({
@@ -194,7 +194,12 @@ class RankPage extends Component {
 
   render() {
     return (
-      <View className='index'>
+      <View
+        className='index'
+        style={{
+          fontSize: '14px',
+        }}
+      >
         <AtSearchBar
           value={this.state.searchValue}
           onChange={this.onChange.bind(this)}
@@ -257,66 +262,75 @@ class RankPage extends Component {
             margin: '0 20px 0 20px',
             width: 'auto',
           }}>
-            <View className='at-col'>当前段位: {this.mapLevelId(this.state.playerStats.level ? this.state.playerStats.level.id : null)}</View>
+            <View className='at-col'>段位: {this.mapLevelId(this.state.playerStats.level ? this.state.playerStats.level.id : null)}</View>
             <View className='at-col'>分数: {this.state.playerStats.level.score}</View>
           </View>
-          <View className='at-row' style={{
-            margin: '0 20px 0 20px',
-            width: 'auto',
-          }}>
+          <View className='at-row' style={style}>
             <View className='at-col'>记录场数: {this.state.playerStats.count}</View>
             <View className='at-col'>平均顺位: {Math.round(this.state.playerStats.avg_rank * 100) / 100}</View>
           </View>
-          <View className='at-row' style={{
-            margin: '0 20px 0 20px',
-            width: 'auto',
-          }}>
-            <View className='at-col'>副露率: {this.percentRender(this.state.playerExtendedStates.副露率)}</View>
-            <View className='at-col'>和了巡数: {Math.round(this.state.playerExtendedStates.和了巡数 * 100) / 100}</View>
-          </View>
-          <View className='at-row' style={{
-            margin: '0 20px 0 20px',
-            width: 'auto',
-          }}>
+          <View className='at-row' style={style}>
             <View className='at-col'>和牌率: {this.percentRender(this.state.playerExtendedStates.和牌率)}</View>
             <View className='at-col'>放铳率: {this.percentRender(this.state.playerExtendedStates.放铳率)}</View>
           </View>
+          <View className='at-row' style={style}>
+            <View className='at-col'>自摸率: {this.percentRender(this.state.playerExtendedStates.自摸率)}</View>
+            <View className='at-col'>和了巡数: {Math.round(this.state.playerExtendedStates.和了巡数 * 100) / 100}</View>
+          </View>
 
-          <View className='at-row' style={{
-            margin: '0 20px 0 20px',
-            width: 'auto',
-          }}>
+          <View className='at-row' style={style}>
             <View className='at-col'>平均打点: {Math.round(this.state.playerExtendedStates.平均打点)}</View>
             <View className='at-col'>平均铳点: {Math.round(this.state.playerExtendedStates.平均铳点)}</View>
           </View>
-          <View className='at-row' style={{
-            margin: '0 20px 0 20px',
-            width: 'auto',
-          }}>
+          <View className='at-row' style={style}>
             <View className='at-col'>流局率: {this.percentRender(this.state.playerExtendedStates.流局率)}</View>
             <View className='at-col'>流听率: {this.percentRender(this.state.playerExtendedStates.流听率)}</View>
           </View>
-          <View className='at-row' style={{
-            margin: '0 20px 0 20px',
-            width: 'auto',
-          }}>
+          <View className='at-row' style={style}>
             <View className='at-col'>立直率: {this.percentRender(this.state.playerExtendedStates.立直率)}</View>
-            <View className='at-col'>自摸率: {this.percentRender(this.state.playerExtendedStates.自摸率)}</View>
+            <View className='at-col'>副露率: {this.percentRender(this.state.playerExtendedStates.副露率)}</View>
           </View>
-          <View className='at-row' style={{
-            margin: '0 20px 0 20px',
-            width: 'auto',
-          }}>
+          <View className='at-row' style={style}>
             <View className='at-col'>最大连庄: {this.tap(this.state.playerExtendedStates.最大连庄)}</View>
             <View className='at-col'>默听率: {this.percentRender(this.state.playerExtendedStates.默听率)}</View>
           </View>
-          <View className='at-row' style={{
-            margin: '0 20px 0 20px',
-            width: 'auto',
-          }}>
+          <View className='at-row' style={style}>
             <View className='at-col'>被飞率: {this.percentRender(this.state.playerStats.negative_rate)}</View>
             <View className='at-col'>安定段位：{PlayerMetadata.estimateStableLevel2(this.state.playerStats, 12)}</View>
 
+          </View>
+          <AtDivider content='更多数据' />
+
+
+
+
+
+          <View className='at-row' style={style}>
+            <View className='at-col'>一发率: {this.percentRender(this.state.playerExtendedStates.一发率)}</View>
+            <View className='at-col'>里宝率: {this.percentRender(this.state.playerExtendedStates.里宝率)}</View>
+          </View>
+          <View className='at-row' style={style}>
+            <View className='at-col'>被炸率: {this.percentRender(this.state.playerExtendedStates.被炸率)}</View>
+            <View className='at-col'>平均被炸点数: {this.tap(this.state.playerExtendedStates.平均被炸点数)}</View>
+          </View>
+          <View className='at-row' style={style}>
+            <View className='at-col'>立直后和率: {this.percentRender(this.state.playerExtendedStates.立直后和牌率)}</View>
+            <View className='at-col'>副露后和率: {this.percentRender(this.state.playerExtendedStates.副露后和牌率)}</View>
+          </View>
+
+          <View className='at-row' style={style}>
+            <View className='at-col'>立直后铳率: {this.percentRender(this.state.playerExtendedStates.立直后放铳率)}</View>
+            <View className='at-col'>副露后铳率: {this.percentRender(this.state.playerExtendedStates.副露后放铳率)}</View>
+          </View>
+
+          <View className='at-row' style={style}>
+            <View className='at-col'>立直后流局率: {this.percentRender(this.state.playerExtendedStates.立直后流局率)}</View>
+            <View className='at-col'>副露后流局率: {this.percentRender(this.state.playerExtendedStates.副露后流局率)}</View>
+          </View>
+
+          <View className='at-row' style={style}>
+            <View className='at-col'>放铳时立直率: {this.percentRender(this.state.playerExtendedStates.放铳时立直率)}</View>
+            <View className='at-col'>放铳时副露率: {this.percentRender(this.state.playerExtendedStates.放铳时副露率)}</View>
           </View>
         </View> : null
 
