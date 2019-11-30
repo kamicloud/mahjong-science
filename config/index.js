@@ -1,6 +1,6 @@
 const config = {
-  projectName: 'majhong-science',
-  date: '2019-6-27',
+  projectName: 'mahjong-science',
+  date: '2019-11-30',
   designWidth: 750,
   deviceRatio: {
     '640': 2.34 / 2,

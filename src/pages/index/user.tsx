@@ -2,12 +2,11 @@ import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
+import Chart from 'taro-echarts'
 
 import { AtSearchBar, AtDivider, AtAccordion } from 'taro-ui'
 import apis from '../../utils/api';
-import { PlayerMetadata } from '../../../node_modules/amae-koromo/src/utils/dataTypes'
-import Chart from 'taro-echarts'
-import sapk from '../../apis/sapikacu'
+import { PlayerMetadata } from '../../../node_modules/amae-koromo/src/data/types/metadata'
 
 const style = {
   margin: '0 20px 0 20px',

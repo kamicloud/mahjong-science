@@ -33,15 +33,11 @@ class AboutPage extends Component {
    */
   config: Config = {
     navigationBarTitleText: '关于'
-  }
+  };
 
   state: PageState = {
     tab: null,
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
-  }
+  };
 
   componentWillMount() {
   }
@@ -49,6 +45,10 @@ class AboutPage extends Component {
   componentWillUnmount() { }
 
   componentDidMount() {
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(this.props, nextProps)
   }
 
   componentDidShow() { }
