@@ -2,14 +2,14 @@ import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-import _ from 'lodash'
+import random from 'lodash/random';
 
 import { AtTabBar, AtSwitch, AtAccordion, AtButton } from 'taro-ui'
 
 const chestMapping = require('../../utils/chest-mapping.json');
 const itemMapping = require('../../utils/item-mapping.json')
 
-const chestArray = _.values(chestMapping);
+const chestArray = Object.values(chestMapping);
 
 type Gain = {
   type: number,
@@ -73,7 +73,7 @@ const advGiftBox = [
   303083,
 ];
 
-const skinBox = _.map(chestArray, 'id').filter((id) => {
+const skinBox = chestArray.map(chest => chest.id).filter((id) => {
   return (girlBox.indexOf(id) === -1 && boyBox.indexOf(id) === -1) &&
     id !== 1999 && // 许愿石
     id !== 1046 && // 一周年桌布
@@ -150,13 +150,13 @@ class SimulatorPage extends Component {
   }
 
   randomOneFromArray(collection: any[]) {
-    const index = _.random(0, collection.length - 1)
+    const index = random(0, collection.length - 1)
 
     return collection[index];
   }
 
   drawOnce() {
-    const value = _.random(0, 99);
+    const value = random(0, 99);
     if (value < 5) {
       // character
       this.setState({

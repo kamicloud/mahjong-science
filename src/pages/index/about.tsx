@@ -131,10 +131,15 @@ class AboutPage extends Component {
           <View className='at-article'>
             <View className='at-article__content'>
               <View className='at-article__section'>
+                <View className='at-article__h2'>1.13.0</View>
+                <View className='at-article__info'>
+                  2019-12-01
+                </View>
+                <View className='at-article__p'>功能：增加雀士资料，暂时一个小版本。</View>
                 <View className='at-article__h2'>1.12.0</View>
                 <View className='at-article__info'>
                   2019-11-23
-              </View>
+                </View>
                 <View className='at-article__p'>功能：增加图书馆，目前收录两本科学麻雀书籍。</View>
                 <View className='at-article__p'>功能：寻觅区分竹林之路和樱花之路。</View>
                 <View className='at-article__p'>修复：火焰立直不再被误当作雀士，感谢阿熙吧报告bug。</View>

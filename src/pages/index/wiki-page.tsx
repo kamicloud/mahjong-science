@@ -25,7 +25,7 @@ interface WikiPage {
 const dict = [
   {
     image: 'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/extendRes/emo/e200008/4.png',
-    value: '役种词典',
+    value: '役种资料',
     page: '/pages/wiki/han'
   },
   {
@@ -47,6 +47,11 @@ const dict = [
     image: 'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/extendRes/emo/e200009/0.png',
     value: '图书馆',
     page: '/pages/wiki/library'
+  },
+  {
+    image: 'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/extendRes/emo/e200015/12.png',
+    value: '雀士资料',
+    page: '/pages/wiki/character'
   },
 ]
 

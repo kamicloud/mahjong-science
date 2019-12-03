@@ -4,7 +4,6 @@ import { View } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 
 import { AtSearchBar, AtDivider, AtAccordion } from 'taro-ui'
-import Chart from 'taro-echarts'
 
 type PageStateProps = {
 }

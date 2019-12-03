@@ -29,7 +29,19 @@ const books = [
     finished: false,
     urlMobile: 'https://www.bilibili.com/read/mobile-readlist/rl48989',
     url: 'https://www.bilibili.com/read/readlist/rl48989',
-  }
+  }, {
+    image: 'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/library/super-menchin-mahjong.png',
+    title: '超門前主義麻雀',
+    author: 'リツミサン',
+    translator: '雪见yukimi',
+    type: 0,
+    memo: '一击必杀门清流，日麻的居合术，犬流。',
+    level: '全段位',
+    finished: false,
+    urlMobile: 'https://zhuanlan.zhihu.com/p/75904775',
+    url: 'https://zhuanlan.zhihu.com/p/75904775',
+  },
+
 ]
 
 type PageStateProps = {

@@ -6,13 +6,13 @@
 	"setting": {
 		"urlCheck": false,
 		"es6": false,
-		"enhance": true,
+		"enhance": false,
 		"postcss": false,
 		"minified": true,
 		"newFeature": true,
 		"coverView": true,
 		"nodeModules": true,
-		"autoAudits": true,
+		"autoAudits": false,
 		"checkInvalidKey": true,
 		"checkSiteMap": true,
 		"uploadWithSourceMap": true,
@@ -126,6 +126,13 @@
 					"id": -1,
 					"name": "pages/wiki/library",
 					"pathName": "pages/wiki/library",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/wiki/character",
+					"pathName": "pages/wiki/character",
 					"scene": null
 				}
 			]

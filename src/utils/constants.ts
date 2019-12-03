@@ -1,6 +1,3 @@
-import _ from 'lodash';
-
-
 const TILE_LABEL_MAP = [
   '1m',
   '2m',
@@ -44,7 +41,10 @@ const TILE_MAP = Object.assign({
   '0m': '0m',
   '0p': '0p',
   '0s': '0s',
-}, _.zipObject(TILE_LABEL_MAP, TILE_LABEL_MAP));
+}, TILE_LABEL_MAP.reduce((c, tile) => {
+  c[tile] = tile;
+  return c;
+}, {}));
 
 const SHANTEN_LABEL_MAP = [
   '听牌',

@@ -37,7 +37,7 @@ class App extends Component {
       'pages/wiki/article',
       'pages/wiki/simulator',
       'pages/wiki/library',
-
+      'pages/wiki/character',
     ],
     tabBar: {
       list: [{
