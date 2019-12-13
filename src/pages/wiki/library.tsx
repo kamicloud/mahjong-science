@@ -4,7 +4,6 @@ import { View, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 
 import { AtPagination, AtNoticebar, AtAccordion } from 'taro-ui'
-import Chart from 'taro-echarts'
 
 const books = [
   {

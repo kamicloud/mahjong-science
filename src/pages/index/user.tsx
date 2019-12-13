@@ -1,12 +1,18 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View } from '@tarojs/components'
+import { View, Picker, Text } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-import Chart from 'taro-echarts'
-
-import { AtSearchBar, AtDivider, AtAccordion } from 'taro-ui'
+import { F2Canvas } from "taro-f2";
+import { fixF2 } from "taro-f2/dist/weapp/common/f2-tool.ts";
+import F2 from "@antv/f2/lib/index-all"
+import { AtSearchBar, AtDivider, AtAccordion, AtFab, AtActionSheet, AtActionSheetItem } from 'taro-ui'
 import apis from '../../utils/api';
-import { PlayerMetadata } from '../../../node_modules/amae-koromo/src/data/types/metadata'
+import { PlayerMetadata, PlayerExtendedStats } from '../../../node_modules/amae-koromo/src/data/types/metadata'
+import Compare from './components/compare'
+import { mapLevelId } from '../../utils/constants'
+import { tap } from '../../utils/func-util';
+
+const ROOM_MAP = ['', '12', '16'];
 
 const style = {
   margin: '0 20px 0 20px',
@@ -21,13 +27,33 @@ type PageDispatchProps = {
 
 type PageOwnProps = {}
 
+fixF2(F2);
+
+type PlayerForCompare = {
+  room: number,
+  playerStats?: PlayerMetadata,
+  playerExtendedStates?: PlayerExtendedStats,
+}
 
 type PageState = {
-  playerExtendedStates: any,
-  playerStats: any,
+  pie: any,
+  chart?: any,
+  width?: number,
+  selector: string[],
+  selectedRoom: number,
+  playerRoom: number,
+  selectedPlayer?: number,
+  playerStats?: PlayerMetadata,
+  playerExtendedStates?: PlayerExtendedStats,
   searchValue: string,
   playerList: any,
-  open: boolean
+  open: boolean,
+
+  mode: 'view' | 'compare',
+
+  openCompare: boolean,
+  leftCompare?: PlayerForCompare,
+  rightCompare?: PlayerForCompare,
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -35,7 +61,6 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 interface RankPage {
   props: IProps;
 }
-
 @connect(({ }) => ({
 }), (dispatch) => ({}))
 class RankPage extends Component {
@@ -52,56 +77,60 @@ class RankPage extends Component {
   };
 
   state: PageState = {
-    playerExtendedStates: {
-
-    },
+    pie: null,
+    selector: ['全部', '玉之间', '王座之间'],
+    selectedRoom: 0,
+    playerRoom: 0,
+    width: undefined,
     open: true,
     searchValue: '',
-    playerStats: {},
+    selectedPlayer: undefined,
+    playerStats: undefined,
+    playerExtendedStates: undefined,
     playerList: [],
 
+    mode: 'view',
+
+    openCompare: false,
+    leftCompare: undefined,
+    rightCompare: undefined,
   };
 
-  componentWillReceiveProps(nextProps) {
-  }
-
-  componentWillMount() {
-  }
-
-  componentWillUnmount() {
-  }
-
-  componentDidMount() {
-  }
+  chart;
 
   searchUser(id) {
     this.setState({
+      selectedPlayer: id,
       open: false,
     })
-    apis.mahjong.proxy(`https://ak-data-2.sapk.ch/api/player_extended_stats/${id}?mode=`, (data) => {
+    const { selectedRoom } = this.state;
+    apis.mahjong.proxy(`https://ak-data-2.sapk.ch/api/player_extended_stats/${id}?mode=${ROOM_MAP[this.state.selectedRoom]}`, (data) => {
+      if (data.error === 'id_not_found') {
+        return;
+      }
       this.setState({
         playerExtendedStates: data,
       })
     })
-    apis.mahjong.proxy(`https://ak-data-2.sapk.ch/api/player_stats/${id}?mode=`, (data) => {
+    apis.mahjong.proxy(`https://ak-data-2.sapk.ch/api/player_stats/${id}?mode=${ROOM_MAP[this.state.selectedRoom]}`, (data) => {
+      if (data.error === 'id_not_found') {
+        Taro.showModal({
+          title: '错误',
+          content: '角色在当前房间无对战记录',
+          showCancel: false,
+        })
+        return;
+      }
       this.setState({
         playerStats: data,
+        playerRoom: selectedRoom,
       })
+      this.drawPie(data)
     })
-  }
-
-  componentDidShow() {
-  }
-
-  componentDidHide() {
   }
 
   percentRender(number: number) {
     return (Math.round(number * 10000) / 100) + '%';
-  }
-
-  tap(number) {
-    return number
   }
 
   onGetUserInfo() {
@@ -122,59 +151,6 @@ class RankPage extends Component {
     })
   }
 
-  mapLevelId(id) {
-    switch (id) {
-      case 10601:
-      case 20601:
-        return '魂天';
-      case 10503:
-      case 20503:
-        return '雀圣三星';
-      case 10502:
-      case 20502:
-        return '雀圣二星';
-      case 10501:
-      case 20501:
-        return '雀圣一星';
-      case 10403:
-      case 20403:
-        return '雀豪三星';
-      case 10402:
-      case 20402:
-        return '雀豪二星';
-      case 10401:
-      case 20401:
-        return '雀豪一星';
-      case 10303:
-      case 20303:
-        return '雀杰三星';
-      case 10302:
-      case 20302:
-        return '雀杰二星';
-      case 10301:
-      case 20301:
-        return '雀杰一星';
-      case 10203:
-      case 20203:
-        return '雀士三星';
-      case 10202:
-      case 20202:
-        return '雀士二星';
-      case 10201:
-      case 20201:
-        return '雀士一星';
-      case 10103:
-      case 20103:
-        return '初心三星';
-      case 10102:
-      case 20102:
-        return '初心二星';
-      case 10101:
-      case 20101:
-        return '初心一星';
-    }
-  }
-
   onChange(value) {
     this.setState({
       searchValue: value,
@@ -191,6 +167,75 @@ class RankPage extends Component {
     })
   }
 
+  bindPie(canvas, width) {
+    this.setState({
+      pie: canvas,
+      width,
+    })
+  }
+
+  drawPie(playerStats) {
+    if (Taro.getEnv() !== Taro.ENV_TYPE.WEAPP || !playerStats) {
+      return;
+    }
+    if (this.chart) {
+      this.chart.destroy();
+    }
+
+    this.chart = new F2.Chart({
+      el: this.state.pie,
+      width: this.state.width,
+      height: 200,
+    });
+    const chart = this.chart;
+    const LABEL = [
+      '一位率',
+      '二位率',
+      '三位率',
+      '四位率',
+    ];
+    const data = playerStats.rank_rates.map((rate, index) => {
+      return {
+        name: LABEL[index],
+        y: rate,
+        const: 'const',
+      }
+    })
+
+
+    chart.source(data);
+    chart.coord('polar', {
+      transposed: true,
+      radius: 1
+    });
+    chart.legend(false);
+    chart.axis(false);
+    chart.tooltip(false);
+
+    // 添加饼图文本
+    chart.pieLabel({
+      sidePadding: 40,
+      label1: function label1(data, color) {
+        return {
+          text: data.name,
+          fill: color
+        };
+      },
+      label2: function label2(data) {
+        return {
+          text: String(Math.floor(data.y * 10000) / 100) + '%',
+          fill: '#808080',
+          fontWeight: 'bold'
+        };
+      }
+    });
+
+    chart.interval()
+      .position('const*y')
+      .color('name', ['#2aa74c', '#18a2b7', '#6c7519', '#dc3746'])
+      .adjust('stack');
+    chart.render();
+  }
   render() {
     return (
       <View
@@ -199,183 +244,248 @@ class RankPage extends Component {
           fontSize: '14px',
         }}
       >
-        <AtSearchBar
-          value={this.state.searchValue}
-          onChange={this.onChange.bind(this)}
-          onActionClick={this.onActionClick.bind(this)}
-          showActionButton
-          placeholder='请先搜索并选择用户'
-
-        />
-
-        <AtAccordion
-          open={this.state.open}
-          onClick={() => {
-            this.setState({
-              open: !this.state.open
-            })
-          }}
-          title='搜索结果'
-        >
-          {
-            this.state.playerList.map(player => {
-              return <View
-                key={player.id}
-                onClick={() => {
-                  this.searchUser(player.id)
-                }} style={{
-                  margin: '5px 10px 0 10px',
-                  width: 'auto',
-                }}
-              >{player.nickname}[{this.mapLevelId(player.level.id)}]</View>
-
-            })
-          }
-        </AtAccordion>
-
-        {/* <Chart
-          chartId="1"
-          option={{
-            xAxis: {
-              type: 'category',
-              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-            },
-            yAxis: {
-              type: 'value'
-            },
-            series: [{
-              data: [820, 932, 901, 934, 1290, 1330, 1320],
-              type: 'line'
-            }]
-          }}
-        /> */}
-        <AtDivider content='用户数据' />
-        {this.state.playerStats.nickname ? <View>
-
-          <View className='at-row' style={{
-            textAlign: 'center',
-          }}>
-            <View className='at-col'>玩家 {this.state.playerStats.nickname}</View>
-          </View>
-          <View className='at-row' style={{
-            margin: '0 20px 0 20px',
-            width: 'auto',
-          }}>
-            <View className='at-col'>段位: {this.mapLevelId(this.state.playerStats.level ? this.state.playerStats.level.id : null)}</View>
-            <View className='at-col'>分数: {this.state.playerStats.level.score}</View>
-          </View>
-          <View className='at-row' style={style}>
-            <View className='at-col'>记录场数: {this.state.playerStats.count}</View>
-            <View className='at-col'>平均顺位: {Math.round(this.state.playerStats.avg_rank * 100) / 100}</View>
-          </View>
-          <View className='at-row' style={style}>
-            <View className='at-col'>和牌率: {this.percentRender(this.state.playerExtendedStates.和牌率)}</View>
-            <View className='at-col'>放铳率: {this.percentRender(this.state.playerExtendedStates.放铳率)}</View>
-          </View>
-          <View className='at-row' style={style}>
-            <View className='at-col'>自摸率: {this.percentRender(this.state.playerExtendedStates.自摸率)}</View>
-            <View className='at-col'>和了巡数: {Math.round(this.state.playerExtendedStates.和了巡数 * 100) / 100}</View>
-          </View>
-
-          <View className='at-row' style={style}>
-            <View className='at-col'>平均打点: {Math.round(this.state.playerExtendedStates.平均打点)}</View>
-            <View className='at-col'>平均铳点: {Math.round(this.state.playerExtendedStates.平均铳点)}</View>
-          </View>
-          <View className='at-row' style={style}>
-            <View className='at-col'>流局率: {this.percentRender(this.state.playerExtendedStates.流局率)}</View>
-            <View className='at-col'>流听率: {this.percentRender(this.state.playerExtendedStates.流听率)}</View>
-          </View>
-          <View className='at-row' style={style}>
-            <View className='at-col'>立直率: {this.percentRender(this.state.playerExtendedStates.立直率)}</View>
-            <View className='at-col'>副露率: {this.percentRender(this.state.playerExtendedStates.副露率)}</View>
-          </View>
-          <View className='at-row' style={style}>
-            <View className='at-col'>最大连庄: {this.tap(this.state.playerExtendedStates.最大连庄)}</View>
-            <View className='at-col'>默听率: {this.percentRender(this.state.playerExtendedStates.默听率)}</View>
-          </View>
-          <View className='at-row' style={style}>
-            <View className='at-col'>被飞率: {this.percentRender(this.state.playerStats.negative_rate)}</View>
-            <View className='at-col'>安定段位：{PlayerMetadata.estimateStableLevel2(this.state.playerStats, 12)}</View>
-
-          </View>
-          <AtDivider content='更多数据' />
-
-
-
-
-
-          <View className='at-row' style={style}>
-            <View className='at-col'>一发率: {this.percentRender(this.state.playerExtendedStates.一发率)}</View>
-            <View className='at-col'>里宝率: {this.percentRender(this.state.playerExtendedStates.里宝率)}</View>
-          </View>
-          <View className='at-row' style={style}>
-            <View className='at-col'>被炸率: {this.percentRender(this.state.playerExtendedStates.被炸率)}</View>
-            <View className='at-col'>平均被炸点数: {this.tap(this.state.playerExtendedStates.平均被炸点数)}</View>
-          </View>
-          <View className='at-row' style={style}>
-            <View className='at-col'>立直后和率: {this.percentRender(this.state.playerExtendedStates.立直后和牌率)}</View>
-            <View className='at-col'>副露后和率: {this.percentRender(this.state.playerExtendedStates.副露后和牌率)}</View>
-          </View>
-
-          <View className='at-row' style={style}>
-            <View className='at-col'>立直后铳率: {this.percentRender(this.state.playerExtendedStates.立直后放铳率)}</View>
-            <View className='at-col'>副露后铳率: {this.percentRender(this.state.playerExtendedStates.副露后放铳率)}</View>
-          </View>
-
-          <View className='at-row' style={style}>
-            <View className='at-col'>立直后流局率: {this.percentRender(this.state.playerExtendedStates.立直后流局率)}</View>
-            <View className='at-col'>副露后流局率: {this.percentRender(this.state.playerExtendedStates.副露后流局率)}</View>
-          </View>
-
-          <View className='at-row' style={style}>
-            <View className='at-col'>放铳时立直率: {this.percentRender(this.state.playerExtendedStates.放铳时立直率)}</View>
-            <View className='at-col'>放铳时副露率: {this.percentRender(this.state.playerExtendedStates.放铳时副露率)}</View>
-          </View>
-        </View> : null
-
-        }
-        {
-          this.state.playerStats.rank_rates ? <Chart
-            chartId="2"
-            option={{
-              title: {
-                text: '累计战绩',
-                x: 'center'
-              },
-              tooltip: {
-                trigger: 'item',
-                formatter: "{b}"
-              },
-              series: [
-                {
-                  name: '顺位概率',
-                  type: 'pie',
-                  radius: '55%',
-                  center: ['50%', '60%'],
-                  data: [
-                    { value: this.state.playerStats.rank_rates[0], name: '一位' + this.percentRender(this.state.playerStats.rank_rates[0]) },
-                    { value: this.state.playerStats.rank_rates[1], name: '二位' + this.percentRender(this.state.playerStats.rank_rates[1]) },
-                    { value: this.state.playerStats.rank_rates[2], name: '三位' + this.percentRender(this.state.playerStats.rank_rates[2]) },
-                    { value: this.state.playerStats.rank_rates[3], name: '四位' + this.percentRender(this.state.playerStats.rank_rates[3]) },
-                  ],
-                  itemStyle: {
-                    emphasis: {
-                      shadowBlur: 10,
-                      shadowOffsetX: 0,
-                      shadowColor: 'rgba(0, 0, 0, 0.5)'
-                    }
-                  }
+        <View style={{
+          display: this.state.mode === 'view' ? 'block' : 'none',
+        }}>
+          <Picker
+            mode='selector'
+            range={this.state.selector}
+            onChange={event => {
+              this.setState({
+                selectedRoom: event.detail.value
+              }, () => {
+                if (this.state.selectedPlayer) {
+                  this.searchUser(this.state.selectedPlayer)
                 }
-              ]
+              })
             }}
-          /> : null
-        }
+            value={this.state.selectedRoom}
+          >
+            <View className='at-accordion__header'>
+              <Text
+                style={{
+                  width: '100%',
+                }}
+              >战绩房间</Text>
+              <Text style={{
+                textAlign: 'right',
+                width: '100%',
+              }}>{this.state.selector[this.state.selectedRoom]}</Text>
+
+            </View>
+          </Picker>
+          <AtSearchBar
+            value={this.state.searchValue}
+            onChange={this.onChange.bind(this)}
+            onActionClick={this.onActionClick.bind(this)}
+            showActionButton
+            placeholder='请先搜索并选择用户'
+
+          />
+
+          <AtAccordion
+            open={this.state.open}
+            onClick={() => {
+              this.setState({
+                open: !this.state.open
+              })
+            }}
+            title='搜索结果'
+          >
+            {
+              this.state.playerList.map(player => {
+                return <View
+                  key={player.id}
+                  onClick={() => {
+                    this.searchUser(player.id)
+                  }} style={{
+                    margin: '5px 10px 0 10px',
+                    width: 'auto',
+                  }}
+                >{player.nickname}[{mapLevelId(player.level.id)}]</View>
+
+              })
+            }
+          </AtAccordion>
+
+          <AtDivider content='数据' />
+          {this.state.playerStats && this.state.playerExtendedStates ? <View>
+
+            <View className='at-row' style={style}>
+              <View className='at-col' style={{ textAlign: 'center' }}>{this.state.playerStats.nickname} - {this.state.selector[this.state.playerRoom]}</View>
+            </View>
+            <View className='at-row' style={style}>
+              <View className='at-col'>段位: {mapLevelId(this.state.playerStats.level ? this.state.playerStats.level.id : undefined)}</View>
+              <View className='at-col'>分数: {this.state.playerStats.level.score}</View>
+            </View>
+            <View className='at-row' style={style}>
+              <View className='at-col'>记录场数: {this.state.playerStats.count}</View>
+              <View className='at-col'>平均顺位: {Math.round(this.state.playerStats.avg_rank * 100) / 100}</View>
+            </View>
+            <View className='at-row' style={style}>
+              <View className='at-col'>和牌率: {this.percentRender(this.state.playerExtendedStates.和牌率)}</View>
+              <View className='at-col'>放铳率: {this.percentRender(this.state.playerExtendedStates.放铳率)}</View>
+            </View>
+            <View className='at-row' style={style}>
+              <View className='at-col'>自摸率: {this.percentRender(this.state.playerExtendedStates.自摸率)}</View>
+              <View className='at-col'>和了巡数: {Math.round(this.state.playerExtendedStates.和了巡数 * 100) / 100}</View>
+            </View>
+
+            <View className='at-row' style={style}>
+              <View className='at-col'>平均打点: {Math.round(this.state.playerExtendedStates.平均打点)}</View>
+              <View className='at-col'>平均铳点: {Math.round(this.state.playerExtendedStates.平均铳点)}</View>
+            </View>
+            <View className='at-row' style={style}>
+              <View className='at-col'>流局率: {this.percentRender(this.state.playerExtendedStates.流局率)}</View>
+              <View className='at-col'>流听率: {this.percentRender(this.state.playerExtendedStates.流听率)}</View>
+            </View>
+            <View className='at-row' style={style}>
+              <View className='at-col'>立直率: {this.percentRender(this.state.playerExtendedStates.立直率)}</View>
+              <View className='at-col'>副露率: {this.percentRender(this.state.playerExtendedStates.副露率)}</View>
+            </View>
+            <View className='at-row' style={style}>
+              <View className='at-col'>最大连庄: {tap(this.state.playerExtendedStates.最大连庄)}</View>
+              <View className='at-col'>默听率: {this.percentRender(this.state.playerExtendedStates.默听率)}</View>
+            </View>
+            <View className='at-row' style={style}>
+              <View className='at-col'>被飞率: {this.percentRender(this.state.playerStats.negative_rate)}</View>
+              <View className='at-col'>安定段位：{PlayerMetadata.estimateStableLevel2(this.state.playerStats, 12)}</View>
+
+            </View>
+            <AtDivider content='更多数据' />
+
+
+
+
+
+            <View className='at-row' style={style}>
+              <View className='at-col'>一发率: {this.percentRender(this.state.playerExtendedStates.一发率)}</View>
+              <View className='at-col'>里宝率: {this.percentRender(this.state.playerExtendedStates.里宝率)}</View>
+            </View>
+            <View className='at-row' style={style}>
+              <View className='at-col'>被炸率: {this.percentRender(this.state.playerExtendedStates.被炸率)}</View>
+              <View className='at-col'>平均被炸点数: {tap(this.state.playerExtendedStates.平均被炸点数)}</View>
+            </View>
+            <View className='at-row' style={style}>
+              <View className='at-col'>立直后和率: {this.percentRender(this.state.playerExtendedStates.立直后和牌率)}</View>
+              <View className='at-col'>副露后和率: {this.percentRender(this.state.playerExtendedStates.副露后和牌率)}</View>
+            </View>
+
+            <View className='at-row' style={style}>
+              <View className='at-col'>立直后铳率: {this.percentRender(this.state.playerExtendedStates.立直后放铳率)}</View>
+              <View className='at-col'>副露后铳率: {this.percentRender(this.state.playerExtendedStates.副露后放铳率)}</View>
+            </View>
+
+            <View className='at-row' style={style}>
+              <View className='at-col'>立直后流局率: {this.percentRender(this.state.playerExtendedStates.立直后流局率)}</View>
+              <View className='at-col'>副露后流局率: {this.percentRender(this.state.playerExtendedStates.副露后流局率)}</View>
+            </View>
+
+            <View className='at-row' style={style}>
+              <View className='at-col'>放铳时立直率: {this.percentRender(this.state.playerExtendedStates.放铳时立直率)}</View>
+              <View className='at-col'>放铳时副露率: {this.percentRender(this.state.playerExtendedStates.放铳时副露率)}</View>
+            </View>
+            <View className='at-row' style={style}>
+              <View className='at-col'>平均起手向听: {Math.round(this.state.playerExtendedStates.平均起手向听 * 100) / 100}</View>
+              <View className='at-col'></View>
+            </View>
+          </View> : null
+
+          }
+          {
+            Taro.getEnv() === Taro.ENV_TYPE.WEAPP ? <View style={{
+              width: '100%',
+              height: this.state.playerStats && this.state.playerStats.rank_rates ? '200px' : '0px',
+            }}>
+              <View
+                style={{
+                  width: '100%',
+                  height: this.state.playerStats && this.state.playerStats.rank_rates ? '200px' : '0px',
+                  display: this.state.openCompare ? 'none' : 'block',
+
+                }}
+              >
+                <F2Canvas onCanvasInit={this.bindPie.bind(this)} />
+
+              </View>
+            </View> : null
+          }
+        </View>
+        <Compare
+          style={{
+            display: this.state.mode === 'compare' ? 'block' : 'none',
+          }}
+          left={this.state.leftCompare}
+          right={this.state.rightCompare}
+        />
         <AtDivider content='鸣谢' />
         <View style={{
           textAlign: 'center',
           width: 'auto',
+          zIndex: -1,
         }}>本页面数据由雀魂牌谱屋提供</View>
-
+        <View
+          style={{
+            position: 'fixed',
+            right: '20px',
+            bottom: '40px',
+            zIndex: 1000,
+          }}
+        >
+          <AtFab
+            onClick={() => { this.setState({ openCompare: true }) }}
+          >
+            <Text className='at-fab__icon at-icon at-icon-menu'></Text>
+          </AtFab>
+        </View>
+        <AtActionSheet
+          isOpened={this.state.openCompare}
+          cancelText='回到查战绩'
+          onClose={() => { this.setState({ openCompare: false }) }}
+          onCancel={() => {
+            this.setState({
+              openCompare: false,
+              mode: 'view',
+            })
+          }}
+        >
+          <AtActionSheetItem
+            onClick={() => {
+              this.setState({
+                leftCompare: {
+                  room: this.state.playerRoom,
+                  playerStats: this.state.playerStats,
+                  playerExtendedStates: this.state.playerExtendedStates,
+                }
+              })
+            }}
+          >
+            放入左侧{this.state.leftCompare && this.state.leftCompare.playerStats ? `（${this.state.leftCompare.playerStats.nickname}）` : null}
+          </AtActionSheetItem>
+          <AtActionSheetItem
+            onClick={() => {
+              this.setState({
+                rightCompare: {
+                  room: this.state.playerRoom,
+                  playerStats: this.state.playerStats,
+                  playerExtendedStates: this.state.playerExtendedStates,
+                }
+              })
+            }}
+          >
+            放入右侧{this.state.rightCompare && this.state.rightCompare.playerStats ? `（${this.state.rightCompare.playerStats.nickname}）` : null}
+          </AtActionSheetItem>
+          <AtActionSheetItem
+            onClick={() => {
+              this.setState({
+                openCompare: false,
+                mode: 'compare',
+              })
+            }}
+          >
+            战绩PK
+          </AtActionSheetItem>
+        </AtActionSheet>
       </View>
     )
   }

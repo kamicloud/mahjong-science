@@ -7,12 +7,13 @@
 		"urlCheck": false,
 		"es6": false,
 		"enhance": false,
-		"postcss": false,
+		"postcss": true,
 		"minified": true,
 		"newFeature": true,
 		"coverView": true,
 		"nodeModules": true,
-		"autoAudits": false,
+		"autoAudits": true,
+		"uglifyFileName": false,
 		"checkInvalidKey": true,
 		"checkSiteMap": true,
 		"uploadWithSourceMap": true,
@@ -46,11 +47,10 @@
 			"list": []
 		},
 		"gamePlugin": {
-			"current": -1,
 			"list": []
 		},
 		"miniprogram": {
-			"current": 2,
+			"current": 0,
 			"list": [
 				{
 					"id": 0,
@@ -133,6 +133,7 @@
 					"id": -1,
 					"name": "pages/wiki/character",
 					"pathName": "pages/wiki/character",
+					"query": "",
 					"scene": null
 				}
 			]

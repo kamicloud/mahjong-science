@@ -131,6 +131,13 @@ class AboutPage extends Component {
           <View className='at-article'>
             <View className='at-article__content'>
               <View className='at-article__section'>
+                <View className='at-article__h2'>1.15.0</View>
+                <View className='at-article__info'>
+                  2019-12-07
+                </View>
+                <View className='at-article__p'>功能：补全所有雀士语音和立绘。</View>
+                <View className='at-article__p'>功能：增加战绩对比功能。</View>
+                <View className='at-article__p'>优化：降低包大小，并极大提升了小程序性能。</View>
                 <View className='at-article__h2'>1.13.0</View>
                 <View className='at-article__info'>
                   2019-12-01

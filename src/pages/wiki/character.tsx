@@ -4,7 +4,14 @@ import { View, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import { AtTabs, AtTabsPane, AtTabBar } from 'taro-ui'
 
+import chunk from 'lodash/chunk';
+import groupBy from 'lodash/groupBy';
+
 const characterMapping = require('../../utils/character-mapping.json');
+const voiceMapping = require('../../dist/voice-mapping.json');
+const skinMapping = require('../../dist/skin-mapping.json');
+
+const skinGroupByCharacterId = groupBy(Object.values(skinMapping), 'character_id');
 
 const characters = Object.values(characterMapping);
 
@@ -86,6 +93,7 @@ type PageOwnProps = {}
 type PageState = {
   current: number,
   currentTab: number,
+  currentSkin: number,
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -112,30 +120,24 @@ class CharacterPage extends Component {
   state: PageState = {
     current: 0,
     currentTab: 0,
+    currentSkin: 0,
   };
 
-  componentWillReceiveProps(nextProps) {
-  }
+  audio;
 
-  componentWillMount() {
-  }
-
-  componentWillUnmount() {
-  }
-
-  componentDidMount() {
-    // const audio = Taro.createInnerAudioContext()
-    // audio.src = 'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/audio/sound/baishinainai/act_babei.mp3'
-    // audio.play()
-  }
-
-  componentDidShow() {
-  }
-
-  componentDidHide() {
+  playVoice(path) {
+    if (this.audio) {
+      this.audio.stop();
+    }
+    this.audio = Taro.createInnerAudioContext()
+    this.audio.src = `https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/${path}.mp3`
+    this.audio.play()
   }
 
   render() {
+    const voices = chunk(voiceMapping[this.state.current + 1], 2)
+    const character = characterMapping[this.state.current + 200001];
+    const skins = skinGroupByCharacterId[this.state.current + 200001]
     return (
       <View
         className='index'
@@ -152,110 +154,145 @@ class CharacterPage extends Component {
               title: character.name_chs
             }
           })}
-          onClick={(current) => { this.setState({ current }) }}
+          onClick={(current) => { this.setState({ current, currentSkin: 0 }) }}
         >
-          {
-            characters.map((character: Character, index) => {
+        </AtTabs>
+        <View
+          key={character.id}
+          style={{
 
-              return <AtTabsPane
-                current={this.state.current}
-                index={index}
+            padding: '10px',
+          }}
+        >
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+            }}
+          >
+            <View
+              style={{
+                width: '120px',
+              }}
+            >
+              <Image
+                style={{
+                  width: '120px',
+                  height: '100px',
+                }}
+                lazyLoad
+                mode='aspectFit'
+                src={`https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/extendRes/charactor/${skinMap[character.id]}/bighead.png`}
+              />
+            </View>
+            <View
+              style={{
+                width: '100%',
+              }}
+            >
+              <View>姓名：{character.name_chs}</View>
+              <View>生日：{character.desc_birth_chs}</View>
+              <View>年龄：{character.desc_age_chs}</View>
+              <View>血型：{character.desc_bloodtype}</View>
+              <View>声优：{character.desc_cv_chs}</View>
+              <View>爱好：{character.desc_hobby_chs}</View>
+            </View>
+          </View>
+          <View>描述：{character.desc_chs}</View>
+        </View>
+        <AtTabs
+          tabList={[
+            { title: '立绘' },
+            { title: '表情' },
+            { title: '语音' },
+          ]}
+          onClick={(currentTab) => { this.setState({ currentTab }) }}
+          current={this.state.currentTab}
+        >
+          <AtTabsPane current={this.state.currentTab} index={0}>
+            <AtTabs
+              current={this.state.currentSkin}
+              tabDirection='vertical'
+              height='2000px'
+              tabList={skins.map(skin => {
+                return {
+                  title: skin.name_chs
+                }
+              })}
+              onClick={(currentSkin) => { this.setState({ currentSkin }) }}
+            >
+              {
+                skins.map((skin, index) => {
+                  return <AtTabsPane tabDirection='vertical' current={this.state.currentSkin} index={index}>
 
-              >
-                <View
-                  key={character.id}
-                  style={{
-
-                    padding: '10px',
-                  }}
-                >
-                  <View
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                    }}
-                  >
-                    <View
-                      style={{
-                        width: '120px',
-                      }}
-                    >
-                      <Image
-                        style={{
-                          width: '120px',
-                          height: '100px',
-                        }}
-                        lazyLoad
-                        mode='aspectFit'
-                        src={`https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/extendRes/charactor/${skinMap[character.id]}/bighead.png`}
-                      />
-                    </View>
                     <View
                       style={{
                         width: '100%',
                       }}
                     >
-                      <View>姓名：{character.name_chs}</View>
-                      <View>生日：{character.desc_birth_chs}</View>
-                      <View>年龄：{character.desc_age_chs}</View>
-                      <View>血型：{character.desc_bloodtype}</View>
-                      <View>声优：{character.desc_cv_chs}</View>
-                      <View>爱好：{character.desc_hobby_chs}</View>
-                    </View>
-                  </View>
-                  <View>描述：{character.desc_chs}</View>
-                  {/* <AtTabBar
-                    tabList={[
-                      { title: '立绘与表情' },
-                      { title: '语音' },
-                    ]}
-                    onClick={(currentTab) => { this.setState({ currentTab }) }}
-                    current={this.state.currentTab}
-                  /> */}
-                  {
-                    this.state.currentTab === 0 ? <View>
-                      <View>
-                        {
-                          emoList.map(id => {
-                            return <Image
-                              style={{
-                                width: '50px',
-                                height: '50px',
-                              }}
-                              lazyLoad
-                              mode='aspectFit'
-                              src={`https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/${character.emo}/${id}.png`}
-                            />
-                          })
-                        }
-
-                      </View>
-                      <View
+                      <Image
                         style={{
                           width: '100%',
                         }}
-                      >
-                        <Image
-                          style={{
-                            width: '100%',
-                            height: '150vw',
-                          }}
-                          mode='aspectFit'
-                          lazyLoad
-                          src={`https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/extendRes/charactor/${skinMap[character.id]}/full.png`}
-                        />
-                      </View>
-                    </View> : <View>
-                      <View className='at-row'><View className='at-col'>吃</View><View className='at-col'>杠</View></View>
+                        mode='widthFix'
+                        lazyLoad
+                        src={`https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/${skin.path}/full.png`}
+                      />
                     </View>
-                  }
-                </View>
-              </AtTabsPane>
+                  </AtTabsPane>
+                })
+              }
+            </AtTabs>
+          </AtTabsPane>
+          <AtTabsPane current={this.state.currentTab} index={1}>
+            <View
+              style={{
+                textAlign: 'center',
+                width: '100%',
+              }}
+            >
+              {
+                emoList.map(id => {
+                  return <Image
+                    style={{
+                      width: '50px',
+                      height: '50px',
+                    }}
+                    lazyLoad
+                    mode='aspectFit'
+                    src={`https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/${character.emo}/${id}.png`}
+                  />
+                })
+              }
 
-            })
-          }
+            </View>
+          </AtTabsPane>
+          <AtTabsPane current={this.state.currentTab} index={2}>
+            <View>
+              {
+                voices.map((voices2) => {
+                  return <View className='at-row'>
+                    {
+                      voices2.map(voice => {
+                        return <View
+                          className='at-col'
+                          style={{
+                            fontSize: '16px',
+                            textAlign: 'center',
+                          }}
+                          onClick={() => {
+                            this.playVoice(voice.path)
+                          }}
+                        >{voice.name_chs}</View>
+                      })
+                    }
+                  </View>
+                })
+              }
+            </View>
+          </AtTabsPane>
         </AtTabs>
-      </View>
+      </View >
     )
   }
 }
