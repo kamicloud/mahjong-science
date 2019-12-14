@@ -7,7 +7,7 @@ import { AtTabs, AtTabsPane, AtNoticebar, AtTabBar } from 'taro-ui'
 
 import apis from '../../utils/api';
 import { RankResponse, Rank, Rank2DTO } from 'src/utils/dtos'
-import avatarMapping from '../../dist/avatar-mapping.json'
+import avatarMapping from '../../dist/skin-mapping.json'
 import Rank2 from './components/rank2';
 import Rank3 from './components/rank3';
 import Rank4 from './components/rank4';

@@ -19,19 +19,6 @@ let res = JSON.stringify(voiceMapping);
 fs.writeFileSync('./src/dist/voice-mapping.json', res);
 
 
-// avatar
-let avatarMapping = require('./utils/avatar-mapping')
-
-for (let i in avatarMapping) {
-  avatarMapping[i] = {
-    path: avatarMapping[i].path,
-  }
-}
-
-
-fs.writeFileSync('./src/dist/avatar-mapping.json', JSON.stringify(avatarMapping));
-
-
 
 // skin
 let skinMapping = require('./utils/skin-mapping')
