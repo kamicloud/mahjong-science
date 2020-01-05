@@ -1,91 +1,24 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Image } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
+import { connect, useDispatch } from '@tarojs/redux'
 import random from 'lodash/random';
 
 import { AtTabBar, AtSwitch, AtAccordion, AtButton } from 'taro-ui'
+import { initChestMapping, initItemMapping } from '../../actions/cfg'
 
-const chestMapping = require('../../utils/chest-mapping.json');
-const itemMapping = require('../../utils/item-mapping.json')
-
-const chestArray = Object.values(chestMapping);
+const dispatch = useDispatch();
 
 type Gain = {
   type: number,
   id: number,
+  itemId: number,
 }
-
-const girlBox = [
-  1001,
-  1002,
-  1003,
-  1004,
-  1005,
-  1006,
-  1031,
-  1032,
-  1043,
-  1044,
-  1054,
-  1055,
-];
-
-const boyBox = [
-  1033,
-  1034,
-  1035,
-  1036,
-];
-
-const greenGiftBox = [
-  303011,
-  303021,
-  303031,
-  303041,
-  303051,
-  303061,
-  303071,
-  303081,
-
-];
-
-
-const blueGiftBox = [
-  303012,
-  303022,
-  303032,
-  303042,
-  303052,
-  303062,
-  303072,
-  303082,
-];
-
-const advGiftBox = [
-  303013,
-  303023,
-  303033,
-  303043,
-  303053,
-  303063,
-  303073,
-  303083,
-];
-
-const skinBox = chestArray.map(chest => chest.id).filter((id) => {
-  return (girlBox.indexOf(id) === -1 && boyBox.indexOf(id) === -1) &&
-    id !== 1999 && // 许愿石
-    id !== 1046 && // 一周年桌布
-    id !== 1025 // 新春桌布
-    ;
-});
 
 type PageStateProps = {
 }
 
-type PageDispatchProps = {
-}
+type PageDispatchProps = CfgStore
 
 type PageOwnProps = {}
 
@@ -98,6 +31,7 @@ type PageState = {
   advGiftCount: number,
   current: number,
   isFilterLowGifts: boolean,
+  chestMapping: any,
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -106,8 +40,9 @@ interface SimulatorPage {
   props: IProps;
 }
 
-@connect(({ }) => ({
-}), (dispatch) => ({}))
+@connect(({ cfg }) => ({
+  ...cfg,
+}))
 class SimulatorPage extends Component {
 
   /**
@@ -129,24 +64,12 @@ class SimulatorPage extends Component {
     skinCount: 0,
     advGiftCount: 0,
     current: 0,
+    chestMapping: {},
   };
 
-  componentWillReceiveProps(nextProps) {
-  }
-
   componentWillMount() {
-  }
-
-  componentWillUnmount() {
-  }
-
-  componentDidMount() {
-  }
-
-  componentDidShow() {
-  }
-
-  componentDidHide() {
+    dispatch(initChestMapping())
+    dispatch(initItemMapping())
   }
 
   randomOneFromArray(collection: any[]) {
@@ -163,8 +86,9 @@ class SimulatorPage extends Component {
         count: ++this.state.count,
         characterCount: ++this.state.characterCount,
         gains: [{
+          id: this.state.count,
           type: 0,
-          id: this.randomOneFromArray(this.state.current === 1 ? boyBox : girlBox)
+          itemId: this.randomOneFromArray(this.state.current === 1 ? this.props.boyBox : this.props.girlBox)
         }, ...this.state.gains],
       })
     } else if (value < 20) {
@@ -173,24 +97,27 @@ class SimulatorPage extends Component {
         count: ++this.state.count,
         skinCount: ++this.state.skinCount,
         gains: [{
+          id: this.state.count,
           type: 1,
-          id: this.randomOneFromArray(skinBox)
+          itemId: this.randomOneFromArray(this.props.skinBox)
         }, ...this.state.gains],
       })
     } else if (value < 44) {
       this.setState({
         count: ++this.state.count,
         gains: [{
+          id: this.state.count,
           type: 2,
-          id: this.randomOneFromArray(greenGiftBox),
+          itemId: this.randomOneFromArray(this.props.greenGiftBox),
         }, ...this.state.gains],
       })
     } else if (value < 95) {
       this.setState({
         count: ++this.state.count,
         gains: [{
+          id: this.state.count,
           type: 2,
-          id: this.randomOneFromArray(blueGiftBox),
+          itemId: this.randomOneFromArray(this.props.blueGiftBox),
         }, ...this.state.gains],
       })
     } else {
@@ -204,8 +131,9 @@ class SimulatorPage extends Component {
       count: ++this.state.count,
       advGiftCount: ++this.state.advGiftCount,
       gains: [{
+        id: this.state.count,
         type: 2,
-        id: this.randomOneFromArray(advGiftBox),
+        itemId: this.randomOneFromArray(this.props.advGiftBox),
       }, ...this.state.gains]
     })
   }
@@ -262,8 +190,9 @@ class SimulatorPage extends Component {
         >
           {
             this.state.gains.map((chest) => {
-              const item = chest.type === 2 ? itemMapping[chest.id] : chestMapping[chest.id];
+              const item = chest.type === 2 ? this.props.itemMapping[chest.itemId] : this.props.chestMapping[chest.itemId];
               return <View
+                key={chest.id}
                 style={{
                   width: '50px',
                   height: '90px',
@@ -275,7 +204,7 @@ class SimulatorPage extends Component {
                     height: '50px',
                   }}
                   mode='aspectFit'
-                  src={`https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/${item.icon}`}
+                  src={`https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/${item.icon}`}
                 />
                 <View
                   style={{

@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { View, Text, Image } from '@tarojs/components'
-import React from 'react';
+import chunk from 'lodash/chunk'
 import constants from '../../../utils/constants'
 
 let bigImagePath = (index: number) => {
@@ -9,23 +9,48 @@ let bigImagePath = (index: number) => {
     '.gif'
 };
 
+const tilesStyle = {
+  flex: 1,
+  display: 'flex',
+  marginLeft: '5px',
+}
+
 export default (props) => {
+  const tileses = props.case ? props.case.split('|').map((tile) => {
+    tile = tile.replace(/b/ig, 'bb')
+    return chunk(tile, 2).map((tiles) => {
+      return tiles.join('')
+    })
+  }) : [];
   return <View style={{
-    flex: 1,
+    flexDirection: 'row',
+    height: '50px',
+    textAlign: 'center',
     display: 'flex',
-    marginLeft: '5px',
+    alignItems: 'center',
+    justifyContent: 'center',
   }}>
+    <View style={tilesStyle}></View>
     {
-      props.tiles ? props.tiles.map((tile) => {
-          return <Image
-            mode='aspectFit'
-            style={{
-              width: '20px',
-              height: '50px',
-            }}
-            src={bigImagePath(tile)}
-          />
-        }) : null
+      tileses.map((tiles) => {
+        return <View style={tilesStyle}>
+          {
+            tiles.map((tile) => {
+              return <Image
+                mode='aspectFit'
+                style={{
+                  width: '20px',
+                  height: '50px',
+                  justifyContent: 'center',
+                }}
+                src={bigImagePath(tile)}
+              />
+            })
+          }
+        </View>
+      })
     }
+    <View style={tilesStyle}></View>
+
   </View>
 }

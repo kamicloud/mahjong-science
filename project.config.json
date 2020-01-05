@@ -30,6 +30,11 @@
 	"libVersion": "2.9.4",
 	"qqappid": "1110027658",
 	"qqLibVersion": "1.8.0",
+	"scripts": {
+		"beforeCompile": "",
+		"beforePreview": "",
+		"beforeUpload": ""
+	},
 	"condition": {
 		"search": {
 			"current": -1,
@@ -133,6 +138,13 @@
 					"id": -1,
 					"name": "pages/wiki/character",
 					"pathName": "pages/wiki/character",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 12,
+					"name": "pages/example",
+					"pathName": "pages/example",
 					"query": "",
 					"scene": null
 				}

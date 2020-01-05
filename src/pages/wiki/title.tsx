@@ -1,16 +1,11 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Image, Text } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
+import { connect, useDispatch } from '@tarojs/redux'
 import { AtCard, AtDivider } from 'taro-ui'
+import { initTitleMapping } from '../../actions/cfg'
 
-const titleMappingRaw = require('../../utils/title-mapping.json')
-
-const titleMapping = [];
-
-for (let i in titleMappingRaw) {
-  titleMapping.push(titleMappingRaw[i]);
-}
+const dispatch = useDispatch();
 
 type PageStateProps = {
 }
@@ -23,14 +18,14 @@ type PageOwnProps = {}
 type PageState = {
 }
 
-type IProps = PageStateProps & PageDispatchProps & PageOwnProps
+type IProps = PageStateProps & PageDispatchProps & PageOwnProps & CfgStore
 
 interface TitlePage {
   props: IProps;
 }
 
-@connect(({ }) => ({
-}), (dispatch) => ({
+@connect(({ cfg }) => ({
+  ...cfg,
 }))
 class TitlePage extends Component {
 
@@ -54,26 +49,14 @@ class TitlePage extends Component {
     incShantenChoices: []
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
-  }
-
   componentWillMount() {
+    dispatch(initTitleMapping())
   }
-
-  componentWillUnmount() { }
-
-  componentDidMount() {
-  }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
 
   render() {
     return (
       <View className='index'>
-        {titleMapping.map((title) => {
+        {this.props.titleArray.map((title) => {
           return <View
             key={title.id}
           >
@@ -88,6 +71,7 @@ class TitlePage extends Component {
                   style={{
                     height: '50px',
                   }}
+                  lazyLoad
                   mode='aspectFit'
                   src={`https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/${title.icon}`}
                 />

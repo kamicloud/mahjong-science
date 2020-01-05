@@ -1,100 +1,40 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Image } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
-import { AtTabs, AtTabsPane, AtTabBar } from 'taro-ui'
+import { View, Image, Ad } from '@tarojs/components'
+import { connect, useDispatch } from '@tarojs/redux'
+import { AtTabs, AtTabsPane, AtFloatLayout } from 'taro-ui'
+import { initVoiceMapping, initCharacterMapping, initSkinMapping } from '../../actions/cfg'
 
 import chunk from 'lodash/chunk';
-import groupBy from 'lodash/groupBy';
 
-const characterMapping = require('../../utils/character-mapping.json');
-const voiceMapping = require('../../dist/voice-mapping.json');
-const skinMapping = require('../../dist/skin-mapping.json');
-
-const skinGroupByCharacterId = groupBy(Object.values(skinMapping), 'character_id');
-
-const characters = Object.values(characterMapping);
+const dispatch = useDispatch();
 
 const emoList = [
   0, 1, 2, 3, 4, 5, 6, 7, 8,
   10, 11, 12,
   14, 15,
   17, 18,
-  997, 998, 999,
+  996, 997, 998, 999,
 ];
-
-const audioMap = {
-  200001: 'yiji',
-  200002: 'erjietang',
-  200003: 'jianai',
-  200004: 'qianzhi',
-  200005: 'xiangyuan',
-  200006: 'fuzi',
-  200007: 'bamuwei',
-  200008: 'jiutiao',
-  200009: 'zeniya',
-  200010: 'kawei',
-  200011: 'sigongxiasheng',
-  200012: 'wangcilang',
-  200013: 'yizhilaikong',
-  200014: 'mingzhiyingshu',
-  200015: 'qingkuniang',
-  200016: 'shala',
-  200017: 'erzhigonghua',
-  200018: 'baishinainai',
-  200019: 'xiaoniaoyouchutian',
-};
-
-const skinMap = {
-  200001: 'yiji',
-  200002: 'erjietang',
-  200003: 'jianai',
-  200004: 'qianzhi',
-  200005: 'xiangyuanwu',
-  200006: 'fuzi',
-  200007: 'bamuwei',
-  200008: 'jiutiao',
-  200009: 'zeniya',
-  200010: 'kawei',
-  200011: 'sigongxiasheng',
-  200012: 'wangcilang',
-  200013: 'yizhilaikong',
-  200014: 'mingzhiyingshu',
-  200015: 'qingku',
-  200016: 'shala',
-  200017: 'erzhigong',
-  200018: 'baishinainai',
-  200019: 'xiaoniaoyouchutian',
-}
-
-interface Character {
-  id: number,
-  name_chs: string,
-  name_jp: string,
-  name_en: string,
-  sex: number,
-  desc_stature_chs: number,
-  desc_birth_chs: string,
-  desc_age_chs: string,
-  desc_bloodtype: string,
-  desc_cv_chs: string,
-  desc_hobby_chs: string,
-  desc_chs: string,
-}
 
 type PageStateProps = {
 }
 
-type PageDispatchProps = {
-}
+type PageDispatchProps = CfgStore
 
 type PageOwnProps = {}
 
 
 type PageState = {
+  time: number,
   current: number,
   currentTab: number,
   currentSkin: number,
+  footer: {
+    title: string,
+    isOpen: boolean,
+    content: string,
+  },
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -103,8 +43,9 @@ interface CharacterPage {
   props: IProps;
 }
 
-@connect(({ }) => ({
-}), (dispatch) => ({}))
+@connect(({ cfg }) => ({
+  ...cfg,
+}))
 class CharacterPage extends Component {
 
   /**
@@ -119,12 +60,24 @@ class CharacterPage extends Component {
   };
 
   state: PageState = {
+    time: 0,
     current: 0,
     currentTab: 0,
     currentSkin: 0,
+    footer: {
+      title: '',
+      isOpen: false,
+      content: '',
+    },
   };
 
   audio;
+
+  componentWillMount() {
+    dispatch(initVoiceMapping())
+    dispatch(initCharacterMapping())
+    dispatch(initSkinMapping())
+  }
 
   playVoice(path) {
     if (this.audio) {
@@ -136,9 +89,15 @@ class CharacterPage extends Component {
   }
 
   render() {
-    const voices = chunk(voiceMapping[this.state.current + 1], 2)
-    const character = characterMapping[this.state.current + 200001];
-    const skins = skinGroupByCharacterId[this.state.current + 200001]
+    const voices = Object.keys(this.props.voiceMapping).length ? this.props.voiceMapping[this.state.current + 1] : [];
+    const character = Object.keys(this.props.characterMapping).length ? this.props.characterMapping[this.state.current + 200001] : null;
+    const skins = Object.keys(this.props.skinGroupByCharacterId).length ? this.props.skinGroupByCharacterId[this.state.current + 200001] : []
+
+    const gameVoices = chunk(voices.filter(voice => voice.category === 1), 2)
+    const groundVoices = chunk(voices.filter(voice => voice.category === 2), 2)
+
+    const head = skins.length ? `https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/${skins[this.state.currentSkin].path}/bighead.png` : '';
+    console.log(this.props, this.props.characterMapping, character)
     return (
       <View
         className='index'
@@ -146,153 +105,238 @@ class CharacterPage extends Component {
           fontSize: '14px',
         }}
       >
-        <AtTabs
-          current={this.state.current}
-          scroll
-          animated={false}
-          tabList={characters.map((character: Character) => {
-            return {
-              title: character.name_chs
-            }
-          })}
-          onClick={(current) => { this.setState({ current, currentSkin: 0 }) }}
-        >
-        </AtTabs>
-        <View
-          key={character.id}
-          style={{
-
-            padding: '10px',
-          }}
-        >
+        {character ? <View>
+          <AtTabs
+            current={this.state.current}
+            scroll
+            animated={false}
+            tabList={this.props.characterArray.map((character: MajsoulCharacter) => {
+              return {
+                title: character.name_chs
+              }
+            })}
+            onClick={(current) => { this.setState({ current, currentSkin: 0 }) }}
+          >
+          </AtTabs>
           <View
+            key={character.id}
             style={{
-              display: 'flex',
-              flexDirection: 'row',
+
+              padding: '10px',
             }}
           >
             <View
               style={{
-                width: '120px',
+                display: 'flex',
+                flexDirection: 'row',
               }}
             >
-              <Image
+              <View
                 style={{
                   width: '120px',
-                  height: '100px',
                 }}
-                lazyLoad
-                mode='aspectFit'
-                src={`https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/extendRes/charactor/${skinMap[character.id]}/bighead.png`}
-              />
+              >
+                <Image
+                  style={{
+                    width: '120px',
+                    height: '100px',
+                  }}
+                  lazyLoad
+                  mode='aspectFit'
+                  src={head}
+                />
+              </View>
+              <View
+                style={{
+                  width: '100%',
+                }}
+              >
+                <View>姓名：{character.name_chs}</View>
+                <View>生日：{character.desc_birth_chs}</View>
+                <View>年龄：{character.desc_age_chs}</View>
+                <View>血型：{character.desc_bloodtype}</View>
+                <View>声优：{character.desc_cv_chs}</View>
+                <View>爱好：{character.desc_hobby_chs}</View>
+              </View>
             </View>
-            <View
-              style={{
-                width: '100%',
-              }}
-            >
-              <View>姓名：{character.name_chs}</View>
-              <View>生日：{character.desc_birth_chs}</View>
-              <View>年龄：{character.desc_age_chs}</View>
-              <View>血型：{character.desc_bloodtype}</View>
-              <View>声优：{character.desc_cv_chs}</View>
-              <View>爱好：{character.desc_hobby_chs}</View>
-            </View>
+            <View>描述：{character.desc_chs}</View>
           </View>
-          <View>描述：{character.desc_chs}</View>
-        </View>
-        <AtTabs
-          tabList={[
-            { title: '立绘' },
-            { title: '表情' },
-            { title: '语音' },
-          ]}
-          onClick={(currentTab) => { this.setState({ currentTab }) }}
-          current={this.state.currentTab}
-        >
-          <AtTabsPane current={this.state.currentTab} index={0}>
-            <AtTabs
-              current={this.state.currentSkin}
-              tabDirection='vertical'
-              height='2000px'
-              tabList={skins.map(skin => {
-                return {
-                  title: skin.name_chs
-                }
-              })}
-              onClick={(currentSkin) => { this.setState({ currentSkin }) }}
-            >
-              {
-                skins.map((skin, index) => {
-                  return <AtTabsPane tabDirection='vertical' current={this.state.currentSkin} index={index}>
-
-                    <View
-                      style={{
-                        width: '100%',
-                      }}
+          <AtTabs
+            tabList={[
+              { title: '立绘' },
+              { title: '表情' },
+              { title: '交互语音' },
+              { title: '对局语音' },
+              { title: '契约' },
+            ]}
+            onClick={(currentTab) => { this.setState({ currentTab }) }}
+            current={this.state.currentTab}
+          >
+            <AtTabsPane current={this.state.currentTab} index={0}>
+              <AtTabs
+                current={this.state.currentSkin}
+                tabDirection='vertical'
+                height='2000px'
+                tabList={skins.map(skin => {
+                  return {
+                    title: skin.name_chs
+                  }
+                })}
+                onClick={(currentSkin) => { this.setState({ currentSkin }) }}
+              >
+                {
+                  skins.map((skin, index) => {
+                    return <AtTabsPane
+                      key={skin.id}
+                      tabDirection='vertical'
+                      current={this.state.currentSkin}
+                      index={index}
                     >
-                      <Image
+
+                      <View
                         style={{
                           width: '100%',
                         }}
-                        mode='widthFix'
-                        lazyLoad
-                        src={`https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/${skin.path}/full.png`}
-                      />
-                    </View>
-                  </AtTabsPane>
-                })
-              }
-            </AtTabs>
-          </AtTabsPane>
-          <AtTabsPane current={this.state.currentTab} index={1}>
-            <View
-              style={{
-                textAlign: 'center',
-                width: '100%',
-              }}
-            >
-              {
-                emoList.map(id => {
-                  return <Image
-                    style={{
-                      width: '50px',
-                      height: '50px',
-                    }}
-                    lazyLoad
-                    mode='aspectFit'
-                    src={`https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/${character.emo}/${id}.png`}
-                  />
-                })
-              }
-
-            </View>
-          </AtTabsPane>
-          <AtTabsPane current={this.state.currentTab} index={2}>
-            <View>
-              {
-                voices.map((voices2) => {
-                  return <View className='at-row'>
-                    {
-                      voices2.map(voice => {
-                        return <View
-                          className='at-col'
+                      >
+                        <Image
                           style={{
-                            fontSize: '16px',
-                            textAlign: 'center',
+                            width: '100%',
                           }}
-                          onClick={() => {
-                            this.playVoice(voice.path)
-                          }}
-                        >{voice.name_chs}</View>
-                      })
-                    }
-                  </View>
-                })
-              }
-            </View>
-          </AtTabsPane>
-        </AtTabs>
+                          mode='widthFix'
+                          lazyLoad
+                          src={`https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/${skin.path}/full.png`}
+                        />
+                      </View>
+                    </AtTabsPane>
+                  })
+                }
+              </AtTabs>
+            </AtTabsPane>
+            <AtTabsPane current={this.state.currentTab} index={1}>
+              <View
+                style={{
+                  textAlign: 'center',
+                  width: '100%',
+                }}
+              >
+                {
+                  emoList.map(id => {
+                    return <Image
+                      key={id}
+                      style={{
+                        width: '80px',
+                        height: '80px',
+                      }}
+                      lazyLoad
+                      mode='aspectFit'
+                      src={`https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/${character.emo}/${id}.png`}
+                    />
+                  })
+                }
+
+              </View>
+            </AtTabsPane>
+            <AtTabsPane current={this.state.currentTab} index={2}>
+              <View>
+                {
+                  gameVoices.map((voices2) => {
+                    return <View className='at-row'>
+                      {
+                        voices2.map((voice: MajsoulVoice) => {
+                          return <View
+                            key={voice.name_chs}
+                            className='at-col'
+                            style={{
+                              fontSize: '16px',
+                              textAlign: 'center',
+                            }}
+                            onClick={() => {
+                              this.playVoice(voice.path)
+                              this.setState({
+                                footer: {
+                                  isOpen: true,
+                                  title: voice.name_chs,
+                                  content: voice.words_chs,
+                                }
+                              })
+                            }}
+                          >{voice.name_chs}</View>
+                        })
+                      }
+                    </View>
+                  })
+                }
+              </View>
+            </AtTabsPane>
+            <AtTabsPane current={this.state.currentTab} index={3}>
+              <View>
+                {
+                  groundVoices.map((voices2) => {
+                    return <View className='at-row'>
+                      {
+                        voices2.map((voice: MajsoulVoice) => {
+                          return <View
+                            key={voice.name_chs}
+                            className='at-col'
+                            style={{
+                              fontSize: '16px',
+                              textAlign: 'center',
+                            }}
+                            onClick={() => {
+                              this.playVoice(voice.path)
+                            }}
+                          >{voice.name_chs}</View>
+                        })
+                      }
+                    </View>
+                  })
+                }
+              </View>
+            </AtTabsPane>
+            <AtTabsPane current={this.state.currentTab} index={4}>
+              <View>
+                {
+                  groundVoices.map((voices2) => {
+                    return <View className='at-row'>
+                      {
+                        voices2.map((voice: MajsoulVoice) => {
+                          return <View
+                            className='at-col'
+                            style={{
+                              fontSize: '16px',
+                              textAlign: 'center',
+                            }}
+                            onClick={() => {
+                              this.playVoice(voice.path)
+                            }}
+                          >{voice.name_chs}</View>
+                        })
+                      }
+                    </View>
+                  })
+                }
+              </View>
+            </AtTabsPane>
+          </AtTabs>
+          <AtFloatLayout
+            customStyle={{
+              height: '50px',
+            }}
+            isOpened={this.state.footer.isOpen}
+            title={this.state.footer.title}
+            onClose={() => {
+              this.setState({
+                footer: {
+                  isOpen: false,
+                }
+              })
+            }}
+          >
+            {this.state.footer.content}
+          </AtFloatLayout>
+
+        </View> : null}
+
       </View >
     )
   }

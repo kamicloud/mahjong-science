@@ -1,24 +1,13 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Image, Text } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
+import { connect, useDispatch } from '@tarojs/redux'
 import { AtTabs, AtTabsPane, AtDivider } from 'taro-ui'
 
-import chunk from 'lodash/chunk';
 import Tiles from './components/tiles'
+import { initFanDescMapping } from '../../actions/cfg'
 
-const hanMapping = require('../../utils/fan-mapping.json').fan
-
-hanMapping.forEach(element => {
-  if (element.case) {
-    element.case = element.case.split('|').map((tile) => {
-      tile = tile.replace(/b/ig, 'bb')
-      return chunk(tile, 2).map((tiles) => {
-        return tiles.join('')
-      })
-    })
-  }
-});
+const dispatch = useDispatch()
 
 type PageStateProps = {
 }
@@ -32,14 +21,14 @@ type PageState = {
   current: number,
 }
 
-type IProps = PageStateProps & PageDispatchProps & PageOwnProps
+type IProps = PageStateProps & PageDispatchProps & PageOwnProps & CfgStore
 
 interface HanPage {
   props: IProps;
 }
 
-@connect(({ }) => ({
-}), (dispatch) => ({
+@connect(({ cfg }) => ({
+  ...cfg,
 }))
 class HanPage extends Component {
 
@@ -58,21 +47,9 @@ class HanPage extends Component {
     current: 0,
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
-  }
-
   componentWillMount() {
+    dispatch(initFanDescMapping())
   }
-
-  componentWillUnmount() { }
-
-  componentDidMount() {
-  }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
 
   handleClick(current) {
     this.setState({
@@ -102,21 +79,20 @@ class HanPage extends Component {
   }
 
   render() {
-    let filteredHanMapping = [];
+    let filteredHanArray: MajsoulFanDesc[] = [];
 
     if (this.state.current !== 0 && this.state.current !== 1) {
-      filteredHanMapping = hanMapping.filter((han) => {
+      filteredHanArray = this.props.fanDescArray.filter((han) => {
         // index notice
         return han.tag === this.state.current - 1
       })
     } else if (this.state.current === 0) {
-      filteredHanMapping = hanMapping
+      filteredHanArray = this.props.fanDescArray
     } else if (this.state.current === 1) {
-      filteredHanMapping = hanMapping.filter((han) => {
+      filteredHanArray = this.props.fanDescArray.filter((han) => {
         return [117, 118, 119, 212, 213, 304, 502, 503, 612, 613, 614, 615, 616, 705].indexOf(han.id) !== -1
       })
     }
-
 
     return (
       <View className='index'>
@@ -137,31 +113,18 @@ class HanPage extends Component {
           ]}
           onClick={this.handleClick.bind(this)}>
         </AtTabs>
-        {filteredHanMapping.map((han) => {
+        {filteredHanArray.map((han: MajsoulFanDesc) => {
           return <View
             key={han.id}
           >
             <AtDivider content={han.name_chs} />
-            {han.case ? <View style={{
-              flexDirection: 'row',
-              height: '50px',
-              textAlign: 'center',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-              {
-                han.case.map((tiles) => {
-                  return <Tiles
-                    tiles={tiles}
-                    style={{
-                      flex: 1,
-                      display: 'flex',
-                    }}
-                  />
-                })
-              }
-            </View> : null}
+            <Tiles
+              case={han.case}
+              style={{
+                flex: 1,
+                display: 'flex',
+              }}
+            />
             <View style={{
               padding: '10px',
               fontSize: '14px',

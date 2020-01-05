@@ -39,22 +39,6 @@ class AboutPage extends Component {
     tab: null,
   };
 
-  componentWillMount() {
-  }
-
-  componentWillUnmount() { }
-
-  componentDidMount() {
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
-  }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
-
   render() {
     return (
       <View className='index'>
@@ -115,6 +99,14 @@ class AboutPage extends Component {
                 <View className='at-article__h2'>雀魂牌谱屋</View>
                 <View className='at-article__info'>SAPikachu</View>
                 <View className='at-article__p'>感谢雀魂牌谱屋提供的玩家战绩接口和战绩排名接口。</View>
+              </View>
+              <View className='at-article__section'>
+                <View className='at-article__h2'>雀魂玩家：阿熙吧</View>
+                <View className='at-article__p'>感谢首位为小程序上报BUG的热心雀士。</View>
+              </View>
+              <View className='at-article__section'>
+                <View className='at-article__h2'>Bilibili：查冇此人</View>
+                <View className='at-article__p'>感谢首位发邮件为小程序提供建议的热心雀士，其B站专栏为图书馆等模块提供大量内容支持。</View>
               </View>
             </View>
           </View>
@@ -245,7 +237,7 @@ class AboutPage extends Component {
         >
           <View className='at-article__section'>
             <View className='at-article__p'>
-              作者云水月，雀魂ID 3172 0458 ，雀豪三星恶调狂日流雀士。
+              作者云水月，雀魂ID 3172 0458 ，雀圣一星恶调狂日精准择铳流雀士。
               目前累计 600+ 半庄。
             </View>
             <View className='at-article__p'>
