@@ -6,9 +6,10 @@ interface CfgStore {
   blueGiftBox: number[],
   boyBox: number[],
   girlBox: number[],
-
+  dispatch: (any: any) => {},
   chestMapping: {[index: number]: MajsoulChest},
   chestArray: MajsoulChest[],
+  itemArray: MajsoulItem[],
   itemMapping: {[index: number]: MajsoulItem},
   voiceMapping: {[index: number]: MajsoulVoice[]},
   characterMapping: {[index: number]: MajsoulCharacter},
@@ -19,6 +20,8 @@ interface CfgStore {
   fanDescArray: MajsoulFanDesc[],
   titleMapping: {[index: number]: MajsoulTitle},
   titleArray: MajsoulTitle[],
+  bgmArray: MajsoulBgm[],
+  bgmMapping: {[index: number]: MajsoulBgm},
 }
 
 interface MajsoulCharacter {
@@ -35,11 +38,14 @@ interface MajsoulCharacter {
   desc_hobby_chs: string,
   desc_chs: string,
   emo: string,
+  star_5_material: string,
+  favorite: number,
 }
 
 interface MajsoulChest {
   id: number,
   name_chs: string,
+  icon: string,
 }
 
 interface MajsoulVoice {
@@ -53,6 +59,8 @@ interface MajsoulVoice {
 interface MajsoulItem {
   id: number,
   name_chs: string,
+  icon: string,
+  sargs: string[2],
 }
 
 interface MajsoulTitle {
@@ -119,4 +127,13 @@ interface MajsoulSkin {
   // "face_height": 0,
   // "face_x": 0,
   // "face_y": 0
+}
+
+interface MajsoulBgm {
+  id: number,
+  name_chs: string,
+  name_jp: string,
+  name_en: string,
+  path: string,
+  type: 'lobby' | 'mj'
 }

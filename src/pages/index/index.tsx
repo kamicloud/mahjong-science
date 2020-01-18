@@ -1,6 +1,6 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Text, Image } from '@tarojs/components'
+import { View, Text, Image, WebView } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 
 import { RandomResponse, AnalyseResponse, TileAnalyseResult, AnalyseArrayResponse } from '../../utils/dtos'
@@ -165,8 +165,10 @@ class Index extends Component {
       <View className='index'>
         <View style={{
           padding: '0 20px',
+          fontSize: '18px',
 
         }}>
+          {/* <WebView src='https://mp.weixin.qq.com/s?__biz=MzI0NTE1NDY3MQ==&tempkey=MTA0M195WFJxcGYzeU1EU1ZHZzVUYmJzSzA0WXRkNEJsSkozV083QU1iVFZKX05NMEc2OExGcnVrNXdKeVBSbHJYM3dXUGpYNkZjcnplN3BKZGVBVC1wSTFtMl9qSUhzMHgtY2J3WWVsWFJ0OW5ueXBxOVVndE9zZlExQ21uQlpWVlh6ZUJGa3RWRzFBOUpPdG40WFpLbFUzQTRuampPelRMZTI2Y1MyMnF3fn4%3D&chksm=695397025e241e1491a8d97aaefc661e66c0c04c22d5c9e9e4ec456ea89844639882d85d6e51#rd'></WebView> */}
           <View>
             <AtInput
               name='inputTileString'

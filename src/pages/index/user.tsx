@@ -7,7 +7,7 @@ import { fixF2 } from "taro-f2/dist/weapp/common/f2-tool.ts";
 import F2 from "@antv/f2/lib/index-all"
 import { AtSearchBar, AtDivider, AtAccordion, AtFab, AtActionSheet, AtActionSheetItem } from 'taro-ui'
 import apis from '../../utils/api';
-import { PlayerMetadata, PlayerExtendedStats } from '../../../node_modules/amae-koromo/src/data/types/metadata'
+// import { PlayerMetadata, PlayerExtendedStats } from '../../../node_modules/amae-koromo/src/data/types/metadata'
 import Compare from './components/compare'
 import { mapLevelId } from '../../utils/constants'
 import { tap } from '../../utils/func-util';
@@ -27,24 +27,20 @@ type PageDispatchProps = {
 
 type PageOwnProps = {}
 
-fixF2(F2);
-
 type PlayerForCompare = {
   room: number,
-  playerStats?: PlayerMetadata,
-  playerExtendedStates?: PlayerExtendedStats,
+  playerStats?: any,
+  playerExtendedStates?: any,
 }
 
 type PageState = {
-  pie: any,
   chart?: any,
-  width?: number,
   selector: string[],
   selectedRoom: number,
   playerRoom: number,
   selectedPlayer?: number,
-  playerStats?: PlayerMetadata,
-  playerExtendedStates?: PlayerExtendedStats,
+  playerStats?: any,
+  playerExtendedStates?: any,
   searchValue: string,
   playerList: any,
   open: boolean,
@@ -61,6 +57,11 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 interface RankPage {
   props: IProps;
 }
+
+
+let pie;
+let width;
+
 @connect(({ }) => ({
 }), (dispatch) => ({}))
 class RankPage extends Component {
@@ -77,11 +78,9 @@ class RankPage extends Component {
   };
 
   state: PageState = {
-    pie: null,
     selector: ['全部', '玉之间', '王座之间'],
     selectedRoom: 0,
     playerRoom: 0,
-    width: undefined,
     open: true,
     searchValue: '',
     selectedPlayer: undefined,
@@ -97,6 +96,10 @@ class RankPage extends Component {
   };
 
   chart;
+
+  componentWillMount() {
+    fixF2(F2);
+  }
 
   searchUser(id) {
     this.setState({
@@ -167,15 +170,16 @@ class RankPage extends Component {
     })
   }
 
-  bindPie(canvas, width) {
-    this.setState({
-      pie: canvas,
-      width,
-    })
+  bindPie(canvas, w) {
+    pie = canvas;
+    width = w
   }
 
   drawPie(playerStats) {
-    if (Taro.getEnv() !== Taro.ENV_TYPE.WEAPP || !playerStats) {
+    if (!playerStats ||
+      (Taro.getEnv() !== Taro.ENV_TYPE.WEAPP &&
+        Taro.getEnv() !== Taro.ENV_TYPE.WEB)
+    ) {
       return;
     }
     if (this.chart) {
@@ -183,8 +187,8 @@ class RankPage extends Component {
     }
 
     this.chart = new F2.Chart({
-      el: this.state.pie,
-      width: this.state.width,
+      el: pie,
+      width: width,
       height: 200,
     });
     const chart = this.chart;
@@ -349,7 +353,7 @@ class RankPage extends Component {
             </View>
             <View className='at-row' style={style}>
               <View className='at-col'>被飞率: {this.percentRender(this.state.playerStats.negative_rate)}</View>
-              <View className='at-col'>安定段位：{PlayerMetadata.estimateStableLevel2(this.state.playerStats, 12)}</View>
+              {/* <View className='at-col'>安定段位：{PlayerMetadata.estimateStableLevel2(this.state.playerStats, 12)}</View> */}
 
             </View>
             <AtDivider content='更多数据' />
@@ -393,7 +397,8 @@ class RankPage extends Component {
 
           }
           {
-            Taro.getEnv() === Taro.ENV_TYPE.WEAPP ? <View style={{
+            Taro.getEnv() === Taro.ENV_TYPE.WEAPP ||
+            Taro.getEnv() === Taro.ENV_TYPE.WEB ? <View style={{
               width: '100%',
               height: this.state.playerStats && this.state.playerStats.rank_rates ? '200px' : '0px',
             }}>
@@ -428,7 +433,7 @@ class RankPage extends Component {
           style={{
             position: 'fixed',
             right: '20px',
-            bottom: '40px',
+            bottom: '80px',
             zIndex: 1000,
           }}
         >

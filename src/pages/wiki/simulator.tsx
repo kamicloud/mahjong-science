@@ -1,13 +1,11 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Image } from '@tarojs/components'
-import { connect, useDispatch } from '@tarojs/redux'
+import { connect } from '@tarojs/redux'
 import random from 'lodash/random';
 
 import { AtTabBar, AtSwitch, AtAccordion, AtButton } from 'taro-ui'
 import { initChestMapping, initItemMapping } from '../../actions/cfg'
-
-const dispatch = useDispatch();
 
 type Gain = {
   type: number,
@@ -68,8 +66,8 @@ class SimulatorPage extends Component {
   };
 
   componentWillMount() {
-    dispatch(initChestMapping())
-    dispatch(initItemMapping())
+    this.props.dispatch(initChestMapping())
+    this.props.dispatch(initItemMapping())
   }
 
   randomOneFromArray(collection: any[]) {

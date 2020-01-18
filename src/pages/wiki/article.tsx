@@ -521,22 +521,6 @@ class TitlePage extends Component {
     `
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
-  }
-
-  componentWillMount() {
-  }
-
-  componentWillUnmount() { }
-
-  componentDidMount() {
-  }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
-
   render() {
     return (
       <View className='index'>

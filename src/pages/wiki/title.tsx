@@ -1,11 +1,9 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Image, Text } from '@tarojs/components'
-import { connect, useDispatch } from '@tarojs/redux'
+import { connect } from '@tarojs/redux'
 import { AtCard, AtDivider } from 'taro-ui'
 import { initTitleMapping } from '../../actions/cfg'
-
-const dispatch = useDispatch();
 
 type PageStateProps = {
 }
@@ -50,7 +48,7 @@ class TitlePage extends Component {
   }
 
   componentWillMount() {
-    dispatch(initTitleMapping())
+    this.props.dispatch(initTitleMapping())
   }
 
   render() {

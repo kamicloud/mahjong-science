@@ -12,6 +12,7 @@ const INITIAL_STATE: CfgStore = {
   characterArray: [],
   characterMapping: {},
   chestArray: [],
+  itemArray: [],
   itemMapping: {},
   skinGroupByCharacterId: {},
   voiceMapping: {},
@@ -19,7 +20,9 @@ const INITIAL_STATE: CfgStore = {
   fanDescArray: [],
   fanDescMapping: {},
   titleArray: [],
-  titleMapping: {}
+  titleMapping: {},
+  bgmArray: [],
+  bgmMapping: {},
 }
 
 const girlBox = [
@@ -139,7 +142,14 @@ export default function cfgReducer(state = INITIAL_STATE, action): CfgStore {
     case cfg.INIT_ITEM_MAPPING:
       return {
         ...state,
-        itemMapping: action.payload.itemMapping,
+        ...action.payload,
+        itemArray: Object.values(action.payload.itemMapping),
+      }
+    case cfg.INIT_BGM_MAPPING:
+      return {
+        ...state,
+        ...action.payload,
+        bgmArray: Object.values(action.payload.bgmMapping),
       }
     default:
       return state

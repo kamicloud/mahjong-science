@@ -90,6 +90,9 @@ let apis = {
     titleMapping: (cb) => {
       return rawGet(`${resourceHost}/mahjong-science/cfg/title-mapping.json`).then(cb)
     },
+    bgmMapping: (cb) => {
+      return rawGet(`${resourceHost}/mahjong-science/cfg/bgm-mapping.json`).then(cb)
+    },
   },
   mahjong: {
     proxy: (url, success) => {

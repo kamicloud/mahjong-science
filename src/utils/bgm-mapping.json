@@ -1,0 +1,41 @@
+{
+  "306001": {
+    "id": 306001,
+    "name_chs": "早春赏樱",
+    "name_jp": "早春の花見",
+    "name_en": "Sakura",
+    "path": "music/lobby.mp3",
+    "time_length": 0,
+    "type": "lobby",
+    "unlock_desc_chs": "",
+    "unlock_desc_jp": "",
+    "unlock_desc_en": "",
+    "unlock_item": 0
+  },
+  "306002": {
+    "id": 306002,
+    "name_chs": "仲夏律动",
+    "name_jp": "真夏の律動",
+    "name_en": "Midsummer",
+    "path": "music/zhongxialvdong.mp3",
+    "time_length": 0,
+    "type": "lobby",
+    "unlock_desc_chs": "仲夏活动解锁",
+    "unlock_desc_jp": "イベント限定",
+    "unlock_desc_en": "Unlock by event",
+    "unlock_item": 306002
+  },
+  "306101": {
+    "id": 306101,
+    "name_chs": "竹取之语",
+    "name_jp": "竹取の囁き",
+    "name_en": "Bamboo",
+    "path": "music/game.mp3",
+    "time_length": 0,
+    "type": "mj",
+    "unlock_desc_chs": "",
+    "unlock_desc_jp": "",
+    "unlock_desc_en": "",
+    "unlock_item": 0
+  }
+}

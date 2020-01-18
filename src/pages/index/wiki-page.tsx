@@ -53,6 +53,11 @@ const dict = [
     value: '雀士资料',
     page: '/pages/wiki/character'
   },
+  {
+    image: 'https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/extendRes/emo/e200020/3.png',
+    value: '雀魂音乐',
+    page: '/pages/wiki/music'
+  },
 ]
 
 @connect(({ }) => ({
@@ -74,27 +79,11 @@ class WikiPage extends Component {
   state: PageState = {
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
-  }
-
-  componentWillMount() {
-  }
-
-  componentWillUnmount() { }
-
-  componentDidMount() {
-  }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
-
   render() {
     return (
       <View className='index'>
         <AtGrid
-          onClick={(item: object, index: number) => {
+          onClick={(item: any) => {
             Taro.navigateTo({ url: item.page })
           }}
           data={dict}

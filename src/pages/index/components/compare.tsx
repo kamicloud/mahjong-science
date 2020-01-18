@@ -2,7 +2,7 @@ import { ComponentClass } from 'react'
 import Taro, { Component } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-import { PlayerMetadata, PlayerExtendedStats } from '../../../../node_modules/amae-koromo/src/data/types/metadata'
+// import { PlayerMetadata, PlayerExtendedStats } from '../../../../node_modules/amae-koromo/src/data/types/metadata'
 import round from 'lodash/round';
 import { roundPercent } from '../../../utils/number-util';
 import { tap } from '../../../utils/func-util';
@@ -16,8 +16,8 @@ type PageDispatchProps = {
 
 type PlayerForCompare = {
   room: number,
-  playerStats?: PlayerMetadata,
-  playerExtendedStates?: PlayerExtendedStats,
+  playerStats?: any,
+  playerExtendedStates?: any,
 }
 
 type PageOwnProps = {
@@ -173,11 +173,11 @@ class Compare extends Component {
               <View className='at-col'>{roundPercent(left.playerStats.negative_rate, 2)}</View>
               <View className='at-col'>{roundPercent(right.playerStats.negative_rate, 2)}</View>
             </View>
-            <View className='at-row' style={{ textAlign: 'center', ...style }}>
+            {/* <View className='at-row' style={{ textAlign: 'center', ...style }}>
               <View className='at-col'>安定段位</View>
               <View className='at-col'>{PlayerMetadata.estimateStableLevel2(left.playerStats, 12)}</View>
               <View className='at-col'>{PlayerMetadata.estimateStableLevel2(right.playerStats, 12)}</View>
-            </View>
+            </View> */}
             <View className='at-row' style={{ textAlign: 'center', ...style }}>
               <View className='at-col'>一发率</View>
               <View className='at-col'>{roundPercent(left.playerExtendedStates.一发率, 2)}</View>

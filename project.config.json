@@ -7,8 +7,8 @@
 		"urlCheck": false,
 		"es6": false,
 		"enhance": false,
-		"postcss": true,
-		"minified": true,
+		"postcss": false,
+		"minified": false,
 		"newFeature": true,
 		"coverView": true,
 		"nodeModules": true,
@@ -16,13 +16,14 @@
 		"uglifyFileName": false,
 		"checkInvalidKey": true,
 		"checkSiteMap": true,
-		"uploadWithSourceMap": true,
+		"uploadWithSourceMap": false,
 		"babelSetting": {
 			"ignore": [],
 			"disablePlugins": [],
 			"outputPath": ""
 		},
-		"bundle": true
+		"bundle": true,
+		"remoteDebugLogEnable": false
 	},
 	"compileType": "miniprogram",
 	"simulatorType": "wechat",
@@ -145,6 +146,13 @@
 					"id": 12,
 					"name": "pages/example",
 					"pathName": "pages/example",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/wiki/music",
+					"pathName": "pages/wiki/music",
 					"query": "",
 					"scene": null
 				}

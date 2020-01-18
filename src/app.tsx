@@ -10,9 +10,9 @@ import './app.scss'
 
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
-if (process.env.NODE_ENV !== 'production' && process.env.TARO_ENV === 'h5')  {
-  require('nerv-devtools')
-}
+// if (process.env.NODE_ENV !== 'production' && process.env.TARO_ENV === 'h5')  {
+//   require('nerv-devtools')
+// }
 
 const store = configStore()
 
@@ -38,7 +38,8 @@ class App extends Component {
       'pages/wiki/simulator',
       'pages/wiki/library',
       'pages/wiki/character',
-      'pages/example',
+      'pages/wiki/music',
+      // 'pages/example',
     ],
     tabBar: {
       list: [{
@@ -58,7 +59,7 @@ class App extends Component {
         selectedIconPath: 'images/moments/6007.png',
       }, {
         pagePath: 'pages/index/rank',
-        text: '排行榜',
+        text: '查排行',
         iconPath: 'images/moments/2010.png',
         selectedIconPath: 'images/moments/2010.png',
       }, {

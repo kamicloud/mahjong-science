@@ -1,13 +1,12 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Image, Ad } from '@tarojs/components'
-import { connect, useDispatch } from '@tarojs/redux'
+import { connect } from '@tarojs/redux'
 import { AtTabs, AtTabsPane, AtFloatLayout } from 'taro-ui'
-import { initVoiceMapping, initCharacterMapping, initSkinMapping } from '../../actions/cfg'
 
 import chunk from 'lodash/chunk';
 
-const dispatch = useDispatch();
+import { initVoiceMapping, initCharacterMapping, initSkinMapping, initItemMapping } from '../../actions/cfg'
 
 const emoList = [
   0, 1, 2, 3, 4, 5, 6, 7, 8,
@@ -71,12 +70,13 @@ class CharacterPage extends Component {
     },
   };
 
-  audio;
+  audio: Taro.InnerAudioContext;
 
   componentWillMount() {
-    dispatch(initVoiceMapping())
-    dispatch(initCharacterMapping())
-    dispatch(initSkinMapping())
+    this.props.dispatch(initVoiceMapping())
+    this.props.dispatch(initCharacterMapping())
+    this.props.dispatch(initSkinMapping())
+    this.props.dispatch(initItemMapping())
   }
 
   playVoice(path) {
@@ -97,7 +97,11 @@ class CharacterPage extends Component {
     const groundVoices = chunk(voices.filter(voice => voice.category === 2), 2)
 
     const head = skins.length ? `https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/${skins[this.state.currentSkin].path}/bighead.png` : '';
-    console.log(this.props, this.props.characterMapping, character)
+
+    const marryItems = character ? character.star_5_material.replace('|', ',').split(',').filter(material => {
+      return material.indexOf('-') !== -1;
+    }) : []
+
     return (
       <View
         className='index'
@@ -169,6 +173,7 @@ class CharacterPage extends Component {
               { title: '对局语音' },
               { title: '契约' },
             ]}
+            scroll
             onClick={(currentTab) => { this.setState({ currentTab }) }}
             current={this.state.currentTab}
           >
@@ -296,25 +301,29 @@ class CharacterPage extends Component {
             <AtTabsPane current={this.state.currentTab} index={4}>
               <View>
                 {
-                  groundVoices.map((voices2) => {
+                  marryItems.map(marryItem => {
+                    const [itemId, num] = marryItem.split('-')
+                    const item = this.props.itemMapping[itemId]
                     return <View className='at-row'>
-                      {
-                        voices2.map((voice: MajsoulVoice) => {
-                          return <View
-                            className='at-col'
-                            style={{
-                              fontSize: '16px',
-                              textAlign: 'center',
-                            }}
-                            onClick={() => {
-                              this.playVoice(voice.path)
-                            }}
-                          >{voice.name_chs}</View>
-                        })
-                      }
+                      <View className='at-col' style={{ textAlign: 'center' }}>
+                        <Image
+                          mode='aspectFit'
+                          style={{
+                            width: '60px',
+                            height: '60px',
+                          }}
+                          src={`https://kamicloud.oss-cn-hangzhou.aliyuncs.com/mahjong-science/res/${item.icon}`}
+                        />
+
+                      </View>
+                      <View className='at-col' style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}>{item.name_chs} * {num}</View>
                     </View>
                   })
                 }
+                {/* <Ad style={{marginTop: '10px'}} unitId='adunit-bc057f1a91eb5c4c' /> */}
               </View>
             </AtTabsPane>
           </AtTabs>

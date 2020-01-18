@@ -67,7 +67,8 @@ for (let i in itemMapping) {
   itemMapping[i] = {
     id: itemMapping[i].id,
     icon: itemMapping[i].icon,
-    name_chs: itemMapping[i].name_chs
+    name_chs: itemMapping[i].name_chs,
+    sargs: itemMapping[i].sargs,
   }
 }
 

@@ -81,24 +81,6 @@ class LibraryPage extends Component {
     index: 1,
   };
 
-  componentWillReceiveProps(nextProps) {
-  }
-
-  componentWillMount() {
-  }
-
-  componentWillUnmount() {
-  }
-
-  componentDidMount() {
-  }
-
-  componentDidShow() {
-  }
-
-  componentDidHide() {
-  }
-
   render() {
     const book = books[this.state.index - 1]
     return (

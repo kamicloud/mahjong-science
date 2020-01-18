@@ -1,13 +1,11 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Image, Text } from '@tarojs/components'
-import { connect, useDispatch } from '@tarojs/redux'
+import { connect } from '@tarojs/redux'
 import { AtTabs, AtTabsPane, AtDivider } from 'taro-ui'
 
 import Tiles from './components/tiles'
 import { initFanDescMapping } from '../../actions/cfg'
-
-const dispatch = useDispatch()
 
 type PageStateProps = {
 }
@@ -48,7 +46,7 @@ class HanPage extends Component {
   }
 
   componentWillMount() {
-    dispatch(initFanDescMapping())
+    this.props.dispatch(initFanDescMapping())
   }
 
   handleClick(current) {

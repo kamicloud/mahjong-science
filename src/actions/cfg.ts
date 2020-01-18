@@ -95,3 +95,16 @@ export const initTitleMapping = () => {
     })
   }
 }
+
+export const initBgmMapping = () => {
+  return dispatch => {
+    api.cfg.bgmMapping(data => {
+      dispatch({
+        type: cfg.INIT_BGM_MAPPING,
+        payload: {
+          bgmMapping: data,
+        }
+      })
+    })
+  }
+}
